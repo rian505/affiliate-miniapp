@@ -363,7 +363,7 @@ def build_row(produk, merk, warna, kategori, link):
 # MODELS
 # =====================================================================
 class Entry(BaseModel):
-    initData: str
+    initData: str = ""
     link_tokopedia: str
     produk: str
     warna: str = ""
@@ -380,12 +380,12 @@ class BulkItem(BaseModel):
 
 
 class BulkEntry(BaseModel):
-    initData: str
+    initData: str = ""
     items: list[BulkItem]
 
 
 class AuthOnly(BaseModel):
-    initData: str
+    initData: str = ""
 
 
 class PromptRequest(BaseModel):
@@ -411,7 +411,6 @@ def index():
 # =====================================================================
 @app.post("/submit")
 async def submit(entry: Entry):
-    user = validate_init_data(entry.initData) if BOT_TOKEN else {"first_name": "user"}
     if not entry.link_tokopedia.strip() or not entry.produk.strip():
         raise HTTPException(422, "Link Tokopedia & Produk wajib diisi")
 
@@ -420,12 +419,11 @@ async def submit(entry: Entry):
         append_rows([row])
     except Exception as e:
         raise HTTPException(500, f"Gagal nulis ke sheet: {e}")
-    return JSONResponse({"ok": True, "produk": entry.produk, "by": user.get("first_name", "")})
+    return JSONResponse({"ok": True, "produk": entry.produk})
 
 
 @app.post("/submit-bulk")
 async def submit_bulk(entry: BulkEntry):
-    user = validate_init_data(entry.initData) if BOT_TOKEN else {"first_name": "user"}
     rows = []
     skipped = 0
     for it in entry.items:
@@ -439,14 +437,11 @@ async def submit_bulk(entry: BulkEntry):
         append_rows(rows)
     except Exception as e:
         raise HTTPException(500, f"Gagal nulis ke sheet: {e}")
-    return JSONResponse({"ok": True, "added": len(rows), "skipped": skipped, "by": user.get("first_name", "")})
+    return JSONResponse({"ok": True, "added": len(rows), "skipped": skipped})
 
 
 @app.post("/stats")
 async def stats(entry: AuthOnly):
-    if BOT_TOKEN:
-        validate_init_data(entry.initData)
-
     if not SHEETS_ENABLED:
         return JSONResponse({
             "ok": True, "total": 0, "sudah": 0, "belum": 0,

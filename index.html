@@ -625,9 +625,15 @@
 <div id="toast"></div>
 
 <script>
-const tg = window.Telegram.WebApp;
-tg.ready(); tg.expand();
-try { tg.setHeaderColor("#f9f9fc"); tg.setBackgroundColor("#f9f9fc"); } catch(e){}
+// Telegram WebApp (optional — works standalone too)
+let tg = { initData: "", ready(){}, expand(){} };
+try {
+  if (window.Telegram && window.Telegram.WebApp) {
+    tg = window.Telegram.WebApp;
+    tg.ready(); tg.expand();
+    try { tg.setHeaderColor("#f9f9fc"); tg.setBackgroundColor("#f9f9fc"); } catch(e){}
+  }
+} catch(e){}
 
 const $ = id => document.getElementById(id);
 const API = "";
