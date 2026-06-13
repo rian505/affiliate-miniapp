@@ -2,969 +2,1135 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MINJI Tools</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f9f9fc;
-    --surface: #ffffff;
-    --surface-dim: #dadadc;
-    --surface-container-lowest: #ffffff;
-    --surface-container-low: #f3f3f6;
-    --surface-container: #eeeef0;
-    --surface-container-high: #e8e8ea;
-    --surface-container-highest: #e2e2e5;
+    --primary: #00677d;
+    --primary-c: #00a3c4;
+    --primary-light: #b3ebff;
+    --primary-xlight: #e0f7fa;
+    --secondary: #00323d;
+    --surface: #f9f9fc;
+    --surface-low: #f3f3f6;
+    --surface-card: #ffffff;
     --on-surface: #1a1c1e;
-    --on-surface-variant: #3d494d;
-    --inverse-surface: #2f3133;
-    --inverse-on-surface: #f0f0f3;
+    --on-surface-v: #3d494d;
     --outline: #6d797e;
-    --outline-variant: #bcc8cd;
-    --primary: #00a3c4;
-    --primary-dark: #00677d;
-    --on-primary: #ffffff;
-    --primary-container: #b3ebff;
-    --on-primary-container: #00333f;
-    --inverse-primary: #5cd5f8;
-    --secondary: #3c6470;
-    --on-secondary: #ffffff;
-    --secondary-container: #bce6f5;
-    --on-secondary-container: #406874;
-    --tertiary: #4d6265;
-    --tertiary-container: #d0e7ea;
+    --outline-v: #bcc8cd;
     --error: #ba1a1a;
-    --on-error: #ffffff;
-    --error-container: #ffdad6;
-    --on-error-container: #93000a;
-    --cyan-wash: #e0f7fa;
-    --shadow-cyan: 0px 8px 32px rgba(0, 163, 196, 0.08);
-    --shadow-card: 0px 2px 12px rgba(0, 0, 0, 0.04);
-    --r-sm: 0.25rem;
-    --r: 0.5rem;
-    --r-md: 0.75rem;
-    --r-lg: 1rem;
-    --r-xl: 1.5rem;
-    --r-full: 9999px;
-    --nav-h: 64px;
-    --safe-b: env(safe-area-inset-bottom, 0px);
+    --error-c: #ffdad6;
+    --success: #1a7a3c;
+    --success-c: #d4f0df;
+    --r-sm: 4px;
+    --r: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+    --shadow-card: 0 2px 16px rgba(0,163,196,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-hover: 0 8px 32px rgba(0,163,196,0.14), 0 2px 8px rgba(0,0,0,0.06);
   }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
-    font-family: "Inter", -apple-system, sans-serif;
-    background: var(--bg); color: var(--on-surface);
-    font-size: 16px; line-height: 1.6;
-    padding-bottom: calc(var(--nav-h) + var(--safe-b) + 12px);
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ── Top Bar ── */
-  .topbar {
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--outline-variant);
-    padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-    max-width: 1280px; margin: 0 auto;
-  }
-  .topbar h1 {
-    font-family: "Montserrat", sans-serif;
-    font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--surface);
     color: var(--on-surface);
-  }
-  .topbar h1 span { color: var(--primary); }
-  .topbar .live {
-    display: flex; align-items: center; gap: 6px;
-    font-family: "Montserrat", sans-serif;
-    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
-    color: var(--primary); text-transform: uppercase;
-  }
-  .topbar .live .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--primary);
-    box-shadow: 0 0 8px rgba(0,163,196,0.4);
-    animation: pulse 1.6s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-
-  /* ── Bottom Nav ── */
-  .bottomnav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    z-index: 100;
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid var(--outline-variant);
-    display: flex;
-    padding-bottom: var(--safe-b);
-    height: calc(var(--nav-h) + var(--safe-b));
-  }
-  .nav-item {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 4px; cursor: pointer;
-    color: var(--outline); transition: color .2s;
-    -webkit-user-select: none; user-select: none;
-    padding: 8px 0;
-  }
-  .nav-item.active { color: var(--primary-dark); }
-  .nav-item svg { width: 24px; height: 24px; }
-  .nav-item span {
-    font-family: "Montserrat", sans-serif;
-    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
   }
 
-  /* ── Pages ── */
-  .page { display: none; padding: 20px; max-width: 1280px; margin: 0 auto; min-height: calc(100vh - 120px); }
+  /* ── TOP NAV ── */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(249,249,252,0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--outline-v);
+    padding: 0 24px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    object-fit: cover; border: 2px solid var(--primary-c);
+  }
+  .nav-logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 18px;
+    color: var(--secondary); letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--primary-c); }
+  .nav-tabs {
+    display: flex; gap: 4px;
+    background: var(--surface-low);
+    border-radius: var(--r-xl);
+    padding: 4px;
+  }
+  .nav-tab {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: none; cursor: pointer;
+    background: transparent;
+    color: var(--outline);
+    transition: all .2s ease;
+  }
+  .nav-tab.active {
+    background: var(--surface-card);
+    color: var(--secondary);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  }
+  .nav-tab:hover:not(.active) { color: var(--on-surface); }
+
+  /* ── LAYOUT ── */
+  .page { display: none; }
   .page.active { display: block; animation: fadeIn .25s ease; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
 
-  /* ── Cards ── */
+  .container {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 28px;
+  }
+  .page-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary-c);
+    margin-bottom: 6px;
+  }
+  .page-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--secondary);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .page-desc {
+    font-size: 14px; color: var(--on-surface-v);
+    margin-top: 6px; line-height: 1.5;
+  }
+
+  /* ── CARD ── */
   .card {
-    background: var(--surface); border: 1px solid var(--outline-variant);
-    border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px;
+    background: var(--surface-card);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    margin-bottom: 16px;
     box-shadow: var(--shadow-card);
     transition: box-shadow .2s;
   }
-  .card:hover { box-shadow: var(--shadow-cyan); }
-  .card-header {
-    display: flex; align-items: center; gap: 14px; margin-bottom: 18px;
-  }
-  .card-icon {
-    width: 44px; height: 44px; border-radius: var(--r-md);
-    display: grid; place-items: center; flex-shrink: 0;
-  }
+  .card:hover { box-shadow: var(--shadow-hover); }
   .card-title {
-    font-family: "Montserrat", sans-serif;
-    font-size: 18px; font-weight: 600; color: var(--on-surface);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px; font-weight: 600;
+    color: var(--secondary);
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
   }
-  .card-sub { font-size: 14px; color: var(--on-surface-variant); margin-top: 2px; }
+  .card-title .icon {
+    width: 28px; height: 28px;
+    background: var(--primary-xlight);
+    border-radius: var(--r);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .card-title .icon svg { width: 15px; height: 15px; color: var(--primary); }
 
-  /* ── Stats Grid ── */
-  .stats-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
-  }
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--outline-variant);
-    border-radius: var(--r-lg); padding: 20px; text-align: center;
-    box-shadow: var(--shadow-card);
-    transition: box-shadow .2s, transform .1s;
-  }
-  .stat-card:hover { box-shadow: var(--shadow-cyan); }
-  .stat-val {
-    font-family: "Montserrat", sans-serif;
-    font-size: 36px; font-weight: 700; line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
-  .stat-label {
-    font-family: "Montserrat", sans-serif;
-    font-size: 12px; font-weight: 600; color: var(--on-surface-variant);
-    margin-top: 6px; text-transform: uppercase; letter-spacing: 0.04em;
-  }
-
-  /* ── Section Title ── */
-  .section-title {
-    font-family: "Montserrat", sans-serif;
-    font-size: 14px; font-weight: 600; color: var(--on-surface-variant);
-    text-transform: uppercase; letter-spacing: 0.04em;
-    margin-bottom: 14px; margin-top: 8px;
-  }
-
-  /* ── Forms ── */
-  .field { margin-bottom: 18px; }
-  .field:last-of-type { margin-bottom: 0; }
+  /* ── FORM ELEMENTS ── */
   label {
     display: block;
-    font-family: "Montserrat", sans-serif;
-    font-size: 12px; font-weight: 600; color: var(--on-surface-variant);
-    margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--on-surface-v);
+    margin-bottom: 6px;
   }
-  label .req { color: var(--error); }
-  input, select, textarea {
-    width: 100%; padding: 14px 16px; font-size: 16px;
-    background: var(--surface-container-low); color: var(--on-surface);
-    border: 1px solid var(--outline-variant); border-radius: var(--r);
-    outline: none; transition: border-color .2s, box-shadow .2s;
-    font-family: "Inter", sans-serif;
+  input[type="text"], textarea, select {
+    width: 100%;
+    background: var(--surface-low);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-md);
+    padding: 10px 13px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--on-surface);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    resize: vertical;
   }
-  input::placeholder, textarea::placeholder { color: var(--outline); }
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--primary);
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--primary-c);
     box-shadow: 0 0 0 3px rgba(0,163,196,0.12);
+    background: var(--surface-card);
   }
-  textarea {
-    min-height: 140px; resize: vertical;
-    font-family: "JetBrains Mono", "Inter", monospace;
-    font-size: 13px; line-height: 1.6;
+  textarea { min-height: 120px; }
+  .form-group { margin-bottom: 14px; }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
   }
-  #link { font-family: "JetBrains Mono", "Inter", monospace; font-size: 14px; }
 
+  /* ── BUTTONS ── */
   .btn {
-    width: 100%; padding: 16px; font-size: 15px;
-    font-family: "Montserrat", sans-serif; font-weight: 600;
-    letter-spacing: 0.02em;
-    background: var(--primary); color: var(--on-primary);
-    border: none; border-radius: var(--r); cursor: pointer;
-    transition: background .2s, transform .05s, box-shadow .2s;
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 10px 20px;
+    border-radius: var(--r-md);
+    border: none; cursor: pointer;
+    transition: all .18s ease;
+    text-decoration: none;
   }
-  .btn:hover:not(:disabled) { background: var(--primary-dark); box-shadow: var(--shadow-cyan); }
-  .btn:active:not(:disabled) { transform: scale(0.98); }
-  .btn:disabled { opacity: .4; cursor: default; }
+  .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--secondary); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,103,125,0.25); }
+  .btn-primary:active { transform: none; }
   .btn-outline {
-    background: transparent; border: 1.5px solid var(--primary);
-    color: var(--primary-dark);
+    background: transparent;
+    color: var(--primary);
+    border: 1.5px solid var(--primary-c);
   }
-  .btn-outline:hover:not(:disabled) { background: var(--cyan-wash); }
-  .btn-green { background: #16a34a; color: #fff; }
-  .btn-green:hover:not(:disabled) { background: #15803d; }
-  .btn-secondary {
-    background: var(--secondary-container); color: var(--on-secondary-container);
-    border: none;
+  .btn-outline:hover { background: var(--primary-xlight); }
+  .btn-ghost {
+    background: var(--surface-low);
+    color: var(--on-surface-v);
+    border: 1px solid var(--outline-v);
   }
-  .btn-secondary:hover:not(:disabled) { background: #a8d8ea; }
+  .btn-ghost:hover { background: var(--outline-v); color: var(--on-surface); }
+  .btn-sm { padding: 7px 14px; font-size: 12px; }
+  .btn-full { width: 100%; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
-  /* ── Toggle ── */
-  .toggle {
-    display: flex; gap: 4px; padding: 4px;
-    background: var(--surface-container); border: 1px solid var(--outline-variant);
-    border-radius: var(--r); margin-bottom: 18px;
-  }
-  .toggle button {
-    flex: 1; padding: 10px; font-size: 14px;
-    font-family: "Montserrat", sans-serif; font-weight: 600;
-    background: transparent; color: var(--outline);
-    border: none; border-radius: var(--r-sm); cursor: pointer;
-    transition: all .2s;
-  }
-  .toggle button.active {
-    background: var(--primary); color: var(--on-primary);
-    box-shadow: 0 2px 8px rgba(0,163,196,0.2);
-  }
-
-  /* ── Chips ── */
+  /* ── CHIPS ── */
   .chip {
     display: inline-flex; align-items: center; gap: 4px;
-    padding: 4px 12px; border-radius: var(--r-full);
-    font-family: "Montserrat", sans-serif;
-    font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+    background: var(--primary-xlight);
+    color: var(--secondary);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 3px 10px;
+    border-radius: 999px;
   }
-  .chip-green { background: #dcfce7; color: #166534; }
-  .chip-yellow { background: #fef9c3; color: #854d0e; }
-  .chip-red { background: var(--error-container); color: var(--on-error-container); }
-  .chip-cyan { background: var(--cyan-wash); color: var(--on-primary-container); }
-  .chip-outline {
-    background: transparent; border: 1px solid var(--outline-variant);
-    color: var(--on-surface-variant);
+  .chip-green { background: var(--success-c); color: var(--success); }
+  .chip-red { background: var(--error-c); color: var(--error); }
+
+  /* ── ALERTS ── */
+  .alert {
+    padding: 12px 14px;
+    border-radius: var(--r-md);
+    font-size: 13px; line-height: 1.5;
+    display: flex; gap: 10px; align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .alert svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert-info { background: var(--primary-xlight); color: var(--secondary); }
+  .alert-success { background: var(--success-c); color: var(--success); }
+  .alert-error { background: var(--error-c); color: var(--error); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none; border-top: 1px solid var(--outline-v);
+    margin: 20px 0;
   }
 
-  /* ── Recent list ── */
-  .recent-item {
+  /* ────────────────────────────────
+     FITUR 1 — BULK SHEETS
+  ──────────────────────────────── */
+  .parsed-preview {
+    margin-top: 14px;
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .parsed-preview-header {
+    background: var(--surface-low);
+    padding: 10px 14px;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 0; border-bottom: 1px solid var(--surface-container-high);
+    border-bottom: 1px solid var(--outline-v);
   }
-  .recent-item:last-child { border-bottom: none; }
-  .recent-name {
-    font-family: "Montserrat", sans-serif;
-    font-size: 15px; font-weight: 500; color: var(--on-surface);
+  .parsed-preview-header span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--on-surface-v);
   }
-  .recent-meta { font-size: 13px; color: var(--on-surface-variant); margin-top: 3px; }
+  .parsed-items { max-height: 280px; overflow-y: auto; }
+  .parsed-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--surface-low);
+    transition: background .12s;
+  }
+  .parsed-item:last-child { border-bottom: none; }
+  .parsed-item:hover { background: var(--surface-low); }
+  .parsed-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--primary-c);
+    min-width: 22px;
+    margin-top: 2px;
+  }
+  .parsed-info { flex: 1; min-width: 0; }
+  .parsed-name {
+    font-size: 13px; font-weight: 500;
+    color: var(--on-surface);
+    margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .parsed-link {
+    font-size: 11px; color: var(--outline);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-family: 'Inter', monospace;
+  }
+  .parsed-chips { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
+  .parsed-remove {
+    background: none; border: none; cursor: pointer;
+    color: var(--outline); padding: 2px;
+    border-radius: var(--r-sm);
+    transition: color .12s;
+    margin-top: 2px;
+  }
+  .parsed-remove:hover { color: var(--error); }
+  .parsed-remove svg { width: 14px; height: 14px; }
 
-  /* ── Bulk hint ── */
-  .bulk-hint {
-    font-size: 13px; color: var(--on-surface-variant); margin-top: 10px; line-height: 1.6;
-  }
-  .bulk-hint code {
-    color: var(--primary-dark); background: var(--cyan-wash);
-    padding: 2px 6px; border-radius: var(--r-sm); font-size: 12px;
-  }
-
-  .hidden { display: none !important; }
-
-  /* ── Toast ── */
-  #toast {
-    position: fixed; left: 20px; right: 20px;
-    bottom: calc(var(--nav-h) + var(--safe-b) + 16px);
-    padding: 16px 20px; border-radius: var(--r-md);
-    font-family: "Montserrat", sans-serif;
-    font-weight: 600; font-size: 14px;
-    transform: translateY(120%); transition: transform .3s; z-index: 200;
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-  }
-  #toast.show { transform: translateY(0); }
-  #toast.ok { background: rgba(220,252,231,0.95); color: #166534; border: 1px solid #86efac; }
-  #toast.err { background: rgba(255,218,214,0.95); color: var(--on-error-container); border: 1px solid #fca5a5; }
-
-  /* ── Prompt Generator ── */
-  .cat-filter {
-    display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto;
-    -webkit-overflow-scrolling: touch; padding-bottom: 4px;
-  }
-  .cat-filter::-webkit-scrollbar { display: none; }
-  .cat-btn {
-    padding: 10px 18px; font-size: 13px;
-    font-family: "Montserrat", sans-serif; font-weight: 600;
-    letter-spacing: 0.02em;
-    background: var(--surface); color: var(--on-surface-variant);
-    border: 1px solid var(--outline-variant); border-radius: var(--r-full);
-    cursor: pointer; white-space: nowrap; transition: all .2s;
-  }
-  .cat-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
-  .cat-btn.active {
-    background: var(--primary); color: var(--on-primary);
-    border-color: var(--primary);
-    box-shadow: 0 2px 8px rgba(0,163,196,0.2);
+  .manual-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
   }
 
-  .product-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;
+  .submit-actions {
+    display: flex; gap: 10px; align-items: center;
+    margin-top: 16px;
   }
-  .product-card {
-    background: var(--surface); border: 1px solid var(--outline-variant);
-    border-radius: var(--r-lg); padding: 18px; cursor: pointer;
-    transition: border-color .2s, box-shadow .2s, transform .05s;
+
+  /* ────────────────────────────────
+     FITUR 2 — PROMPT GENERATOR
+  ──────────────────────────────── */
+  .upload-zone {
+    border: 2px dashed var(--outline-v);
+    border-radius: var(--r-lg);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+    background: var(--surface-low);
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--primary-c);
+    background: var(--primary-xlight);
+  }
+  .upload-zone input[type="file"] {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0; cursor: pointer;
+    border: none; background: none; padding: 0;
+  }
+  .upload-zone input[type="file"]:focus { box-shadow: none; }
+  .upload-icon {
+    width: 44px; height: 44px;
+    background: var(--surface-card);
+    border-radius: var(--r-md);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
     box-shadow: var(--shadow-card);
   }
-  .product-card:hover { box-shadow: var(--shadow-cyan); border-color: var(--primary); }
-  .product-card:active { transform: scale(0.97); }
-  .product-card.selected {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px var(--primary), var(--shadow-cyan);
+  .upload-icon svg { width: 22px; height: 22px; color: var(--primary-c); }
+  .upload-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px; font-weight: 600;
+    color: var(--secondary); margin-bottom: 4px;
   }
-  .product-card .p-cat {
-    font-family: "Montserrat", sans-serif;
-    font-size: 11px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.04em; margin-bottom: 8px;
+  .upload-hint { font-size: 12px; color: var(--outline); }
+  .upload-mode-badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 12px;
+    background: var(--primary-xlight);
+    color: var(--primary);
+    border-radius: 999px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.04em;
   }
-  .product-card .p-name {
-    font-family: "Montserrat", sans-serif;
-    font-size: 14px; font-weight: 600; line-height: 1.35;
-    color: var(--on-surface);
-  }
-  .product-card .p-heel { margin-top: 8px; }
 
-  .prompt-type-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
-  .prompt-type-btn {
-    display: flex; align-items: center; gap: 14px;
-    padding: 18px; background: var(--surface-container-low);
-    border: 1px solid var(--outline-variant); border-radius: var(--r-md);
-    cursor: pointer; transition: all .2s;
+  .photo-previews {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 14px;
   }
-  .prompt-type-btn:hover { border-color: var(--primary); background: var(--cyan-wash); }
-  .prompt-type-btn.selected {
-    border-color: var(--primary); background: var(--cyan-wash);
-    box-shadow: 0 0 0 2px var(--primary);
+  .photo-thumb {
+    position: relative;
+    width: 80px; height: 80px;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    border: 2px solid var(--outline-v);
+    flex-shrink: 0;
   }
-  .prompt-type-btn .pt-label {
-    font-family: "Montserrat", sans-serif;
-    font-size: 15px; font-weight: 600; color: var(--on-surface);
+  .photo-thumb img {
+    width: 100%; height: 100%; object-fit: cover;
   }
-  .prompt-type-btn .pt-desc { font-size: 13px; color: var(--on-surface-variant); margin-top: 3px; }
-  .prompt-type-btn .pt-icon { font-size: 24px; flex-shrink: 0; }
+  .photo-thumb .thumb-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,50,61,0.75);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; font-weight: 700;
+    text-align: center; padding: 3px 0;
+    letter-spacing: 0.04em;
+  }
+  .photo-thumb .thumb-remove {
+    position: absolute; top: 3px; right: 3px;
+    width: 18px; height: 18px;
+    background: rgba(186,26,26,0.85);
+    border: none; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .photo-thumb .thumb-remove svg { width: 10px; height: 10px; color: #fff; }
 
-  .prompt-output {
-    background: var(--inverse-surface); color: var(--inverse-on-surface);
-    border-radius: var(--r-md); padding: 18px;
-    font-family: "JetBrains Mono", "Inter", monospace;
+  .prompt-output-block {
+    margin-top: 0;
+  }
+  .prompt-box {
+    background: var(--surface-low);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-md);
+    padding: 14px;
     font-size: 13px; line-height: 1.7;
-    white-space: pre-wrap; word-break: break-word;
-    max-height: 400px; overflow-y: auto; margin-bottom: 16px;
+    color: var(--on-surface);
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 80px;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 10px;
+  }
+  .prompt-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .prompt-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+  .copy-btn {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--surface-card);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r);
+    padding: 5px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 600;
+    color: var(--on-surface-v);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .copy-btn:hover { background: var(--primary-xlight); color: var(--primary); border-color: var(--primary-c); }
+  .copy-btn svg { width: 13px; height: 13px; }
+  .copy-btn.copied { background: var(--success-c); color: var(--success); border-color: var(--success); }
+
+  .loading-spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2.5px solid var(--outline-v);
+    border-top-color: var(--primary-c);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── TOAST ── */
+  .toast-container {
+    position: fixed; bottom: 24px; right: 24px;
+    z-index: 9999;
+    display: flex; flex-direction: column; gap: 8px;
+    pointer-events: none;
+  }
+  .toast {
+    background: var(--secondary);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: var(--r-md);
+    font-size: 13px; font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    display: flex; align-items: center; gap: 8px;
+    pointer-events: all;
+    animation: toastIn .25s ease;
+    max-width: 300px;
+  }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--error); }
+  .toast svg { width: 16px; height: 16px; flex-shrink: 0; }
+  @keyframes toastIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--outline);
+  }
+  .empty-state svg { width: 36px; height: 36px; margin-bottom: 10px; opacity: 0.5; }
+  .empty-state p { font-size: 13px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .container { padding: 20px 16px; }
+    .form-row { grid-template-columns: 1fr; }
+    .manual-fields { grid-template-columns: 1fr 1fr; }
+    .nav-tabs { display: none; }
+    .mobile-tabs {
+      display: flex !important;
+    }
   }
 
-  .prompt-actions { display: flex; gap: 10px; }
-  .prompt-actions .btn { flex: 1; }
-
-  /* ── Prompt Detail View ── */
-  .prompt-detail { animation: fadeIn .25s ease; }
-  .back-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: "Montserrat", sans-serif;
-    font-size: 14px; font-weight: 600; color: var(--primary-dark);
-    background: none; border: none; cursor: pointer; margin-bottom: 16px;
-    padding: 6px 0; letter-spacing: 0.02em;
+  .mobile-tabs {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(249,249,252,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--outline-v);
+    padding: 8px 16px 16px;
+    gap: 8px;
+    z-index: 100;
   }
-  .back-btn svg { width: 18px; height: 18px; }
-
-  .selected-product-chip {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 18px; background: var(--cyan-wash);
-    border: 1px solid var(--primary-container);
-    border-radius: var(--r-full);
-    font-family: "Montserrat", sans-serif;
-    font-size: 14px; font-weight: 600; color: var(--on-primary-container);
-    margin-bottom: 16px;
+  .mobile-tab {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 8px;
+    border-radius: var(--r-md);
+    border: none; cursor: pointer; background: transparent;
+    color: var(--outline);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px; font-weight: 600;
+    transition: all .15s;
   }
+  .mobile-tab svg { width: 20px; height: 20px; }
+  .mobile-tab.active { background: var(--primary-xlight); color: var(--primary); }
 
-  .sweater-select { display: flex; gap: 8px; margin-bottom: 18px; }
-  .sweater-opt {
-    padding: 10px 20px; font-size: 13px;
-    font-family: "Montserrat", sans-serif; font-weight: 600;
-    background: var(--surface-container-low); color: var(--outline);
-    border: 1px solid var(--outline-variant); border-radius: var(--r);
-    cursor: pointer; transition: all .2s;
-  }
-  .sweater-opt:hover { border-color: var(--primary); }
-  .sweater-opt.active {
-    border-color: var(--primary); color: var(--primary-dark);
-    background: var(--cyan-wash);
-    box-shadow: 0 0 0 2px var(--primary);
-  }
-
-  /* ── Scrollbar ── */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--outline); }
-
-  /* ── Desktop ── */
-  @media (min-width: 768px) {
-    .stats-grid { grid-template-columns: repeat(4, 1fr); }
-    .product-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-  @media (min-width: 1024px) {
-    .product-grid { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 640px) {
+    body { padding-bottom: 80px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ═══ Top Bar ═══ -->
-<div class="topbar">
-  <h1>MINJI <span>Tools</span></h1>
-  <span class="live"><span class="dot"></span>Live</span>
-</div>
-
-<!-- ═══ PAGE: HOME ═══ -->
-<div class="page active" id="page-home">
-  <div class="section-title">Dashboard</div>
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-val" id="stat-total" style="color:var(--primary-dark)">—</div>
-      <div class="stat-label">Total Produk</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="stat-sudah" style="color:#16a34a">—</div>
-      <div class="stat-label">Sudah</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="stat-belum" style="color:#ca8a04">—</div>
-      <div class="stat-label">Belum</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="stat-kategori" style="color:var(--on-surface)">—</div>
-      <div class="stat-label">Kategori</div>
-    </div>
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="nav-brand">
+    <img class="nav-avatar" src="https://i.imgur.com/placeholder.png" alt="MINJI" id="avatarImg" onerror="this.style.display='none'">
+    <span class="nav-logo">MINJI <span>Tools</span></span>
   </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon" style="background:var(--cyan-wash);color:var(--primary-dark)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-      </div>
-      <div>
-        <div class="card-title">Kategori</div>
-        <div class="card-sub">Distribusi produk</div>
-      </div>
-    </div>
-    <div id="kategori-bars"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon" style="background:#dcfce7;color:#16a34a">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      </div>
-      <div>
-        <div class="card-title">Terbaru</div>
-        <div class="card-sub">5 produk terakhir</div>
-      </div>
-    </div>
-    <div id="recent-list"></div>
-  </div>
-</div>
-
-<!-- ═══ PAGE: AFFILIATE ═══ -->
-<div class="page" id="page-affiliate">
-  <div class="section-title">Affiliate</div>
-  <div class="card">
-    <div class="toggle">
-      <button id="tab-single" class="active" type="button">Satu</button>
-      <button id="tab-bulk" type="button">Banyak</button>
-    </div>
-
-    <div id="mode-single">
-      <div class="field">
-        <label>Link Tokopedia <span class="req">*</span></label>
-        <input id="link" type="url" inputmode="url" placeholder="https://vt.tokopedia.com/t/...">
-      </div>
-      <div class="field">
-        <label>Nama Produk <span class="req">*</span></label>
-        <input id="produk" type="text" placeholder="Contoh: Sandal Jepit">
-      </div>
-      <div class="field">
-        <label>Warna</label>
-        <input id="warna" type="text" placeholder="Contoh: Hitam">
-      </div>
-      <div class="field">
-        <label>Merk / Toko</label>
-        <input id="merk" type="text" placeholder="Contoh: simpijak">
-      </div>
-      <div class="field">
-        <label>Kategori</label>
-        <select id="kategori">
-          <option value="">— pilih —</option>
-          <option>Sandal/Sepatu</option>
-          <option>Tas</option>
-          <option>Baju</option>
-          <option>Celana</option>
-          <option>Aksesoris</option>
-          <option>Skincare</option>
-          <option>Elektronik</option>
-          <option>Lainnya</option>
-        </select>
-      </div>
-    </div>
-
-    <div id="mode-bulk" class="hidden">
-      <div class="field">
-        <label>Tempel banyak produk <span class="req">*</span></label>
-        <textarea id="bulk" placeholder="Link | Produk | Warna | Merk | Kategori&#10;https://vt.tokopedia.com/t/abc | Sandal Jepit | Hitam | simpijak | Sandal/Sepatu"></textarea>
-        <div class="bulk-hint">
-          Satu baris = satu produk. Pisahkan pakai <code>|</code> atau tab.<br>
-          Urutan: <code>Link</code> · <code>Produk</code> · <code>Warna</code> · <code>Merk</code> · <code>Kategori</code>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn" id="submit-aff">Simpan ke Sheet</button>
-  </div>
-</div>
-
-<!-- ═══ PAGE: PROMPT GENERATOR ═══ -->
-<div class="page" id="page-prompt">
-  <!-- View: Product List -->
-  <div id="prompt-list-view">
-    <div class="section-title">Prompt Generator</div>
-    <div class="card" style="padding-bottom:16px">
-      <div class="card-header" style="margin-bottom:8px">
-        <div class="card-icon" style="background:var(--cyan-wash);color:var(--primary-dark)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        </div>
-        <div>
-          <div class="card-title">Auto Prompt</div>
-          <div class="card-sub">Pilih produk → generate prompt untuk Gemini & Flow</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="cat-filter" id="cat-filter"></div>
-    <div class="product-grid" id="product-grid"></div>
-  </div>
-
-  <!-- View: Prompt Detail -->
-  <div id="prompt-detail-view" class="prompt-detail hidden">
-    <button class="back-btn" id="btn-back-products">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-      Kembali
-    </button>
-
-    <div class="selected-product-chip" id="selected-chip"></div>
-
-    <div class="card">
-      <label style="margin-bottom:10px">Warna Sweater</label>
-      <div class="sweater-select" id="sweater-select">
-        <div class="sweater-opt active" data-val="Blue">🔵 Biru</div>
-        <div class="sweater-opt" data-val="White">⚪ Putih</div>
-      </div>
-
-      <label style="margin-bottom:10px">Tipe Prompt</label>
-      <div class="prompt-type-list" id="prompt-type-list"></div>
-    </div>
-
-    <div id="prompt-result" class="hidden">
-      <div class="card">
-        <div class="card-header" style="margin-bottom:12px">
-          <div class="card-icon" style="background:var(--cyan-wash);color:var(--primary-dark)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-          </div>
-          <div>
-            <div class="card-title" id="result-title">Prompt</div>
-            <div class="card-sub" id="result-sub">Siap copy-paste</div>
-          </div>
-        </div>
-        <div class="prompt-output" id="prompt-text"></div>
-        <div class="prompt-actions">
-          <button class="btn" id="btn-copy-prompt">📋 Copy Prompt</button>
-          <button class="btn btn-outline" id="btn-copy-upload">📋 Copy + Upload</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ Bottom Nav ═══ -->
-<nav class="bottomnav">
-  <div class="nav-item active" data-page="home">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-    <span>Home</span>
-  </div>
-  <div class="nav-item" data-page="affiliate">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-    <span>Affiliate</span>
-  </div>
-  <div class="nav-item" data-page="prompt">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-    <span>Prompt</span>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('sheets')">Spreadsheet</button>
+    <button class="nav-tab" onclick="switchTab('prompt')">Prompt Gen</button>
   </div>
 </nav>
 
-<div id="toast"></div>
+<!-- MOBILE TABS -->
+<div class="mobile-tabs">
+  <button class="mobile-tab active" id="mob-sheets" onclick="switchTab('sheets')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+    Spreadsheet
+  </button>
+  <button class="mobile-tab" id="mob-prompt" onclick="switchTab('prompt')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+    Prompt Gen
+  </button>
+</div>
+
+<!-- PAGE: SHEETS -->
+<div class="page active" id="page-sheets">
+<div class="container">
+  <div class="page-header">
+    <div class="page-eyebrow">Fitur 1</div>
+    <h1 class="page-title">Bulk ke Spreadsheet</h1>
+    <p class="page-desc">Paste link Tokopedia sekaligus — otomatis di-parse ke Google Sheets kamu.</p>
+  </div>
+
+  <!-- STEP 1: Paste Links -->
+  <div class="card">
+    <div class="card-title">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      </div>
+      Paste Link Tokopedia
+    </div>
+
+    <div class="alert alert-info">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>Format bebas — URL bisa digabung dengan nama produk atau dipisah baris baru. Satu URL per produk. Nama produk & warna diambil otomatis.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Link & Produk</label>
+      <textarea id="bulkInput" placeholder="https://vt.tokopedia.com/t/ZS92WhQ7RTxhe-Ychzz/sendal wedges, hitam&#10;https://vt.tokopedia.com/t/ZS92WhD7sSPbv-1j3pf/sandal selop,cream&#10;&#10;Atau pisah baris:&#10;https://vt.tokopedia.com/t/xxx/&#10;nama produk, warna" rows="7"></textarea>
+    </div>
+    <button class="btn btn-outline" onclick="parseLinks()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Parse Link
+    </button>
+
+    <!-- Preview hasil parse -->
+    <div id="parsedPreview" style="display:none">
+      <div class="parsed-preview">
+        <div class="parsed-preview-header">
+          <span id="parsedCount">0 produk ditemukan</span>
+          <button class="btn btn-ghost btn-sm" onclick="clearParsed()">Hapus semua</button>
+        </div>
+        <div class="parsed-items" id="parsedItems"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Manual Fields -->
+  <div class="card" id="manualCard" style="display:none">
+    <div class="card-title">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      Isi Manual (berlaku untuk semua produk di atas)
+    </div>
+
+    <div class="manual-fields">
+      <div class="form-group">
+        <label>Merk / Toko</label>
+        <input type="text" id="manualMerk" placeholder="cth: Lanoes">
+      </div>
+      <div class="form-group">
+        <label>Kategori</label>
+        <input type="text" id="manualKategori" placeholder="cth: Sandal">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <input type="text" id="manualStatus" placeholder="cth: Belum">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Link Drive (opsional)</label>
+      <input type="text" id="manualDrive" placeholder="https://drive.google.com/...">
+    </div>
+
+    <hr class="divider">
+
+    <div class="submit-actions">
+      <button class="btn btn-primary" id="submitBtn" onclick="submitToSheets()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Kirim ke Spreadsheet
+      </button>
+      <span id="submitStatus" style="font-size:13px;color:var(--outline)"></span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- PAGE: PROMPT GENERATOR -->
+<div class="page" id="page-prompt">
+<div class="container">
+  <div class="page-header">
+    <div class="page-eyebrow">Fitur 2</div>
+    <h1 class="page-title">Prompt Generator</h1>
+    <p class="page-desc">Upload foto produk — MINJI generate prompt siap pakai untuk Gemini & Google Flow.</p>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="card">
+    <div class="card-title">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </div>
+      Upload Foto
+    </div>
+
+    <div class="alert alert-info">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div><strong>2+ foto</strong> → 1 prompt untuk <strong>Gemini (foto)</strong> &nbsp;|&nbsp; <strong>1 foto</strong> → 2 prompt untuk <strong>Google Flow (video)</strong></div>
+    </div>
+
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotos(this.files)">
+      <div class="upload-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+      </div>
+      <div class="upload-title">Klik atau seret foto di sini</div>
+      <div class="upload-hint">JPG, PNG, WEBP — bisa pilih lebih dari 1</div>
+      <div class="upload-mode-badge" id="modeBadge">Pilih foto dulu</div>
+    </div>
+
+    <!-- Photo Previews -->
+    <div class="photo-previews" id="photoPreviews"></div>
+  </div>
+
+  <!-- Product Info -->
+  <div class="card" id="productInfoCard" style="display:none">
+    <div class="card-title">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      </div>
+      Info Produk
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nama Produk</label>
+        <input type="text" id="prodNama" placeholder="cth: Lanoes flat slide sandals">
+      </div>
+      <div class="form-group">
+        <label>Warna Produk</label>
+        <input type="text" id="prodWarna" placeholder="cth: dark chocolate brown glossy patent">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Cara Pegang</label>
+        <input type="text" id="prodPegang" placeholder="cth: one hand grips sandal from below, other cradles sides">
+      </div>
+      <div class="form-group">
+        <label>Warna Sweater</label>
+        <input type="text" id="prodSweater" value="blue" placeholder="blue / white">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Detail Produk (opsional — hardware, stitching, texture)</label>
+      <input type="text" id="prodDetail" placeholder="cth: gold rectangular buckle, white contrast stitching all edges">
+    </div>
+
+    <hr class="divider">
+    <button class="btn btn-primary" id="generateBtn" onclick="generatePrompt()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+      Generate Prompt
+    </button>
+  </div>
+
+  <!-- Output -->
+  <div id="promptOutput" style="display:none">
+
+    <!-- FOTO MODE -->
+    <div id="outFoto" style="display:none">
+      <div class="card">
+        <div class="card-title">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          Prompt Foto (Gemini)
+        </div>
+        <div class="prompt-output-block">
+          <div class="prompt-header">
+            <span class="prompt-label">📷 Image Prompt</span>
+            <button class="copy-btn" onclick="copyPrompt('promptFotoText', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="prompt-box" id="promptFotoText"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO MODE -->
+    <div id="outVideo" style="display:none">
+      <div class="card">
+        <div class="card-title">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </div>
+          Prompt Video (Google Flow)
+        </div>
+
+        <div class="prompt-output-block">
+          <div class="prompt-header">
+            <span class="prompt-label">🎬 Scene 1 — Reveal (0–8 detik)</span>
+            <button class="copy-btn" onclick="copyPrompt('promptScene1Text', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="prompt-box" id="promptScene1Text"></div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="prompt-output-block">
+          <div class="prompt-header">
+            <span class="prompt-label">🎬 Scene 2 — Detail Close Up (8–16 detik)</span>
+            <button class="copy-btn" onclick="copyPrompt('promptScene2Text', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="prompt-box" id="promptScene2Text"></div>
+        </div>
+
+        <div class="alert alert-info" style="margin-top:14px;margin-bottom:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div>⚠️ Gunakan <strong>Extend clip</strong> dari Scene 1 untuk Scene 2 agar warna tetap konsisten.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
-// Telegram WebApp (optional — works standalone too)
-let tg = { initData: "", ready(){}, expand(){} };
-try {
-  if (window.Telegram && window.Telegram.WebApp) {
-    tg = window.Telegram.WebApp;
-    tg.ready(); tg.expand();
-    try { tg.setHeaderColor("#f9f9fc"); tg.setBackgroundColor("#f9f9fc"); } catch(e){}
-  }
-} catch(e){}
+// ─── CONFIG — ganti dengan URL Apps Script kamu ──────────────────────────────
+const API_URL = "";  // Same origin — calls our FastAPI backend
+// Contoh: "https://script.google.com/macros/s/AKfycbxxx/exec"
 
-const $ = id => document.getElementById(id);
-const API = "";
+// ─── STATE ───────────────────────────────────
+let parsedProducts = [];
+let uploadedPhotos = [];
 
-// ═══ Toast ═══
-function toast(msg, ok) {
-  const t = $("toast");
-  t.textContent = msg;
-  t.className = "show " + (ok ? "ok" : "err");
-  setTimeout(() => t.className = "", 3000);
+async function apiFetch(body) {
+  const res = await fetch(API_URL + '/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  return res.json();
+}
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+
+  const idx = tab === 'sheets' ? 0 : 1;
+  document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
+  document.getElementById('mob-' + tab)?.classList.add('active');
 }
 
-function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
-
-// ═══ Bottom Nav ═══
-document.querySelectorAll(".nav-item").forEach(el => {
-  el.onclick = () => {
-    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    el.classList.add("active");
-    $("page-" + el.dataset.page).classList.add("active");
-    if (el.dataset.page === "home") loadStats();
-    if (el.dataset.page === "prompt") resetPromptView();
+// ─── TOAST ────────────────────────────────────
+function showToast(msg, type = 'default') {
+  const tc = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icons = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+    error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    default: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
   };
+  t.innerHTML = (icons[type] || icons.default) + `<span>${msg}</span>`;
+  tc.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(8px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); }, 3000);
+}
+
+// ─── FITUR 1: PARSER ─────────────────────────
+function parseLinks() {
+  const raw = document.getElementById('bulkInput').value.trim();
+  if (!raw) { showToast('Paste link dulu ya!', 'error'); return; }
+
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l);
+  const results = [];
+  let current = null;
+
+  for (const line of lines) {
+    const isURL = /^https?:\/\//i.test(line);
+
+    if (isURL) {
+      // Simpan produk sebelumnya
+      if (current) results.push(current);
+
+      // Pisah URL dari inline text (jika ada setelah spasi atau slash terakhir)
+      // Contoh: "https://...xxx/ sendal wedges, hitam"
+      const spaceIdx = line.search(/\s/);
+      let url, inlineText = '';
+
+      if (spaceIdx > -1) {
+        url = line.substring(0, spaceIdx).replace(/\/$/, '');
+        inlineText = line.substring(spaceIdx).trim();
+      } else {
+        url = line.replace(/\/$/, '');
+      }
+
+      if (inlineText) {
+        const parts = inlineText.split(',').map(s => s.trim());
+        current = { url, nama: parts[0] || '', warna: parts[1] || '' };
+      } else {
+        current = { url, nama: '', warna: '' };
+      }
+
+    } else if (current) {
+      // Baris non-URL setelah URL = nama produk / warna
+      if (!current.nama && !current.warna) {
+        const parts = line.split(',').map(s => s.trim());
+        current.nama  = parts[0] || '';
+        current.warna = parts[1] || '';
+      } else if (current.nama && !current.warna) {
+        // Baris ini mungkin hanya warna
+        current.warna = line;
+      }
+    }
+  }
+
+  if (current) results.push(current);
+
+  if (!results.length) { showToast('Tidak ada link valid yang ditemukan.', 'error'); return; }
+
+  parsedProducts = results;
+  renderParsed();
+  showToast(`${results.length} produk berhasil di-parse!`, 'success');
+}
+
+function renderParsed() {
+  const container = document.getElementById('parsedItems');
+  const preview = document.getElementById('parsedPreview');
+  const manualCard = document.getElementById('manualCard');
+  const count = document.getElementById('parsedCount');
+
+  if (!parsedProducts.length) {
+    preview.style.display = 'none';
+    manualCard.style.display = 'none';
+    return;
+  }
+
+  count.textContent = `${parsedProducts.length} produk ditemukan`;
+  preview.style.display = 'block';
+  manualCard.style.display = 'block';
+
+  container.innerHTML = parsedProducts.map((p, i) => `
+    <div class="parsed-item">
+      <div class="parsed-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="parsed-info">
+        <div class="parsed-name">${p.nama || '<span style="color:var(--outline);font-style:italic">nama belum terdeteksi</span>'}</div>
+        <div class="parsed-link">${p.url}</div>
+        <div class="parsed-chips">
+          ${p.warna ? `<span class="chip">${p.warna}</span>` : ''}
+        </div>
+      </div>
+      <button class="parsed-remove" onclick="removeProduct(${i})" title="Hapus">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+function removeProduct(i) {
+  parsedProducts.splice(i, 1);
+  renderParsed();
+}
+
+function clearParsed() {
+  parsedProducts = [];
+  renderParsed();
+}
+
+async function submitToSheets() {
+  if (!parsedProducts.length) { showToast('Tidak ada produk untuk dikirim.', 'error'); return; }
+
+  const merk = document.getElementById('manualMerk').value.trim();
+  const kategori = document.getElementById('manualKategori').value.trim();
+  const status = document.getElementById('manualStatus').value.trim() || 'Belum';
+  const drive = document.getElementById('manualDrive').value.trim();
+
+  const btn = document.getElementById('submitBtn');
+  const statusEl = document.getElementById('submitStatus');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span> Mengirim...';
+
+  const items = parsedProducts.map(p => ({
+    link_tokopedia: p.url,
+    produk: p.nama || '-',
+    warna: p.warna || '',
+    merk,
+    kategori,
+    link_drive: drive,
+    status,
+  }));
+
+  try {
+    const data = await apiFetch({ action: 'submit-bulk', items });
+    if (data.ok) {
+      showToast(`✅ ${data.added} produk berhasil masuk ke Spreadsheet!`, 'success');
+      statusEl.textContent = `${data.added} produk dikirim${data.skipped ? `, ${data.skipped} dilewati` : ''}`;
+      parsedProducts = [];
+      renderParsed();
+      document.getElementById('bulkInput').value = '';
+    } else {
+      throw new Error(data.detail || 'Gagal kirim');
+    }
+  } catch (e) {
+    showToast('Gagal kirim: ' + e.message, 'error');
+    statusEl.textContent = '';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Kirim ke Spreadsheet`;
+  }
+}
+
+// ─── FITUR 2: UPLOAD & PROMPT ────────────────
+function handlePhotos(files) {
+  uploadedPhotos = Array.from(files);
+  renderPhotoPreviews();
+  updateMode();
+}
+
+function renderPhotoPreviews() {
+  const container = document.getElementById('photoPreviews');
+  const infoCard = document.getElementById('productInfoCard');
+
+  container.innerHTML = '';
+  if (!uploadedPhotos.length) {
+    infoCard.style.display = 'none';
+    return;
+  }
+
+  infoCard.style.display = 'block';
+  document.getElementById('promptOutput').style.display = 'none';
+
+  uploadedPhotos.forEach((file, i) => {
+    const url = URL.createObjectURL(file);
+    const labels = uploadedPhotos.length >= 2
+      ? (i === 0 ? 'PRODUK' : i === 1 ? 'BACKGROUND' : `FOTO ${i+1}`)
+      : 'PRODUK';
+
+    const div = document.createElement('div');
+    div.className = 'photo-thumb';
+    div.innerHTML = `
+      <img src="${url}" alt="Foto ${i+1}">
+      <div class="thumb-label">${labels}</div>
+      <button class="thumb-remove" onclick="removePhoto(${i})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function removePhoto(i) {
+  uploadedPhotos.splice(i, 1);
+  renderPhotoPreviews();
+  updateMode();
+}
+
+function updateMode() {
+  const badge = document.getElementById('modeBadge');
+  const n = uploadedPhotos.length;
+  if (n === 0) {
+    badge.textContent = 'Pilih foto dulu';
+    badge.style.background = 'var(--primary-xlight)';
+  } else if (n === 1) {
+    badge.textContent = '1 foto → 2 Prompt Video (Google Flow)';
+    badge.style.background = '#fff3cd';
+    badge.style.color = '#856404';
+  } else {
+    badge.textContent = `${n} foto → 1 Prompt Foto (Gemini)`;
+    badge.style.background = 'var(--success-c)';
+    badge.style.color = 'var(--success)';
+  }
+}
+
+// Drag & drop
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  zone.classList.remove('drag-over');
+  if (e.dataTransfer.files.length) handlePhotos(e.dataTransfer.files);
 });
 
-// ═══ HOME: Stats ═══
-async function loadStats() {
-  try {
-    const res = await fetch(API + "/stats", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ initData: tg.initData })
-    });
-    if (!res.ok) return;
-    const d = await res.json();
-    if (!d.ok) return;
-
-    $("stat-total").textContent = d.total;
-    $("stat-sudah").textContent = d.sudah;
-    $("stat-belum").textContent = d.belum;
-    $("stat-kategori").textContent = d.kategori.length;
-
-    const bars = $("kategori-bars");
-    bars.innerHTML = "";
-    const max = Math.max(...d.kategori.map(k => k[1]), 1);
-    d.kategori.forEach(([name, count]) => {
-      const pct = (count / max * 100).toFixed(0);
-      bars.innerHTML += `
-        <div style="margin-bottom:14px">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-            <span style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:500;color:var(--on-surface)">${name}</span>
-            <span style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:var(--primary-dark)">${count}</span>
-          </div>
-          <div style="height:8px;background:var(--surface-container);border-radius:4px;overflow:hidden">
-            <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--primary),var(--inverse-primary));border-radius:4px;transition:width .6s ease"></div>
-          </div>
-        </div>`;
-    });
-
-    const rl = $("recent-list");
-    rl.innerHTML = "";
-    if (d.recent.length === 0) {
-      rl.innerHTML = '<div style="text-align:center;padding:32px;color:var(--outline)"><p>Belum ada produk</p></div>';
-      return;
-    }
-    d.recent.forEach(r => {
-      const isSudah = /sudah|✅/.test(r.status);
-      rl.innerHTML += `
-        <div class="recent-item">
-          <div>
-            <div class="recent-name">${esc(r.produk)}</div>
-            <div class="recent-meta">${esc(r.tanggal)} · ${esc(r.kategori || '—')}</div>
-          </div>
-          <span class="chip ${isSudah ? 'chip-green' : 'chip-yellow'}">${isSudah ? '✅ Sudah' : '⏳ Belum'}</span>
-        </div>`;
-    });
-  } catch(e) { console.error("stats:", e); }
-}
-
-// ═══ AFFILIATE ═══
-let mode = "single";
-function setMode(m) {
-  mode = m;
-  $("tab-single").classList.toggle("active", m === "single");
-  $("tab-bulk").classList.toggle("active", m === "bulk");
-  $("mode-single").classList.toggle("hidden", m !== "single");
-  $("mode-bulk").classList.toggle("hidden", m !== "bulk");
-}
-$("tab-single").onclick = () => setMode("single");
-$("tab-bulk").onclick = () => setMode("bulk");
-
-function parseBulk(text) {
-  const items = [];
-  for (let raw of text.split("\n")) {
-    const line = raw.trim();
-    if (!line) continue;
-    if (/^link\s*[|\t]/i.test(line)) continue;
-    const parts = line.split(/\t|\|/).map(s => s.trim());
-    const [link, produk, warna="", merk="", kategori=""] = parts;
-    if (!link || !produk) continue;
-    items.push({ link_tokopedia: link, produk, warna, merk, kategori });
-  }
-  return items;
-}
-
-$("submit-aff").onclick = async () => {
-  const btn = $("submit-aff");
-  btn.disabled = true; btn.textContent = "Menyimpan...";
-  try {
-    if (mode === "single") {
-      const link = $("link").value.trim();
-      const produk = $("produk").value.trim();
-      if (!link || !produk) { toast("Link & Produk wajib diisi", false); return; }
-      const res = await fetch(API + "/submit", {
-        method: "POST", headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({
-          initData: tg.initData, link_tokopedia: link, produk,
-          warna: $("warna").value.trim(), merk: $("merk").value.trim(), kategori: $("kategori").value
-        })
-      });
-      const d = await res.json();
-      if (res.ok && d.ok) {
-        toast("✅ " + d.produk + " berhasil disimpan", true);
-        ["link","produk","warna","merk"].forEach(i => $(i).value = "");
-        $("kategori").value = "";
-      } else { toast("❌ " + (d.detail || "Gagal"), false); }
-    } else {
-      const items = parseBulk($("bulk").value);
-      if (!items.length) { toast("Ga ada baris valid", false); return; }
-      const res = await fetch(API + "/submit-bulk", {
-        method: "POST", headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ initData: tg.initData, items })
-      });
-      const d = await res.json();
-      if (res.ok && d.ok) {
-        toast("✅ " + d.added + " produk berhasil disimpan", true);
-        $("bulk").value = "";
-      } else { toast("❌ " + (d.detail || "Gagal"), false); }
-    }
-  } catch(e) { toast("❌ Error koneksi", false); }
-  finally { btn.disabled = false; btn.textContent = "Simpan ke Sheet"; }
-};
-
-// ═══ PROMPT GENERATOR ═══
-let allProducts = [];
-let selectedProduct = null;
-let selectedType = null;
-let selectedSweater = "Blue";
-
-const CAT_ICONS = {
-  "All": "🔥",
-  "Sandal": "👡",
-  "Heels": "👠",
-  "Tas": "👜",
-  "Sepatu": "👟"
-};
-
-const CAT_COLORS = {
-  "Sandal": "var(--primary)",
-  "Heels": "#8b5cf6",
-  "Tas": "#16a34a",
-  "Sepatu": "#ca8a04"
-};
-
-async function loadProducts() {
-  try {
-    const res = await fetch(API + "/products");
-    const d = await res.json();
-    allProducts = d.products;
-    renderCatFilter();
-    renderProducts();
-  } catch(e) { console.error("products:", e); }
-}
-
-function renderCatFilter() {
-  const cats = ["All", ...new Set(allProducts.map(p => p.category))];
-  const el = $("cat-filter");
-  el.innerHTML = "";
-  cats.forEach(cat => {
-    const btn = document.createElement("div");
-    btn.className = "cat-btn" + (cat === "All" ? " active" : "");
-    btn.textContent = (CAT_ICONS[cat] || "") + " " + cat;
-    btn.onclick = () => {
-      el.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderProducts(cat === "All" ? null : cat);
-    };
-    el.appendChild(btn);
-  });
-}
-
-function renderProducts(catFilter = null) {
-  const grid = $("product-grid");
-  grid.innerHTML = "";
-  const filtered = catFilter ? allProducts.filter(p => p.category === catFilter) : allProducts;
-  filtered.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "product-card";
-    const color = CAT_COLORS[p.category] || "var(--on-surface-variant)";
-    card.innerHTML = `
-      <div class="p-cat" style="color:${color}">${esc(p.category)}</div>
-      <div class="p-name">${esc(p.name)}</div>
-      ${p.is_heels ? '<div class="p-heel"><span class="chip chip-cyan">👠 Heels</span></div>' : ''}
-    `;
-    card.onclick = () => selectProduct(p);
-    grid.appendChild(card);
-  });
-}
-
-function selectProduct(product) {
-  selectedProduct = product;
-  selectedType = null;
-  selectedSweater = product.sweater || "Blue";
-
-  $("prompt-list-view").classList.add("hidden");
-  $("prompt-detail-view").classList.remove("hidden");
-  $("prompt-result").classList.add("hidden");
-
-  $("selected-chip").innerHTML = `
-    <span style="color:${CAT_COLORS[product.category] || 'var(--outline)'}">${esc(product.category)}</span>
-    · ${esc(product.name)}
-    ${product.is_heels ? ' <span class="chip chip-cyan" style="margin-left:4px">Heels</span>' : ''}
-  `;
-
-  document.querySelectorAll(".sweater-opt").forEach(el => {
-    el.classList.toggle("active", el.dataset.val === selectedSweater);
-    el.onclick = () => {
-      selectedSweater = el.dataset.val;
-      document.querySelectorAll(".sweater-opt").forEach(e => e.classList.toggle("active", e === el));
-      if (selectedType) generatePrompt();
-    };
-  });
-
-  renderPromptTypes();
-}
-
-async function renderPromptTypes() {
-  try {
-    const res = await fetch(API + "/prompt-types");
-    const d = await res.json();
-    const list = $("prompt-type-list");
-    list.innerHTML = "";
-    d.types.forEach(t => {
-      if (t.heels_only && !selectedProduct.is_heels) return;
-      const btn = document.createElement("div");
-      btn.className = "prompt-type-btn";
-      const icon = t.label.split(" ")[0];
-      const label = t.label.split(" ").slice(1).join(" ");
-      btn.innerHTML = `
-        <div class="pt-icon">${icon}</div>
-        <div>
-          <div class="pt-label">${esc(label)}</div>
-          <div class="pt-desc">${esc(t.desc)}</div>
-        </div>
-      `;
-      btn.onclick = () => {
-        list.querySelectorAll(".prompt-type-btn").forEach(b => b.classList.remove("selected"));
-        btn.classList.add("selected");
-        selectedType = t.key;
-        generatePrompt();
-      };
-      list.appendChild(btn);
-    });
-  } catch(e) { console.error("prompt-types:", e); }
-}
-
 async function generatePrompt() {
-  if (!selectedProduct || !selectedType) return;
+  const nama = document.getElementById('prodNama').value.trim();
+  const warna = document.getElementById('prodWarna').value.trim();
+  const pegang = document.getElementById('prodPegang').value.trim();
+  const sweater = document.getElementById('prodSweater').value.trim() || 'blue';
+  const detail = document.getElementById('prodDetail').value.trim();
+
+  if (!nama) { showToast('Isi nama produk dulu!', 'error'); return; }
+  if (!uploadedPhotos.length) { showToast('Upload foto dulu!', 'error'); return; }
+
+  const mode = uploadedPhotos.length >= 2 ? 'foto' : 'video';
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span> Generating...';
+
   try {
-    const res = await fetch(API + "/generate-prompt", {
-      method: "POST", headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        product_id: selectedProduct.id,
-        prompt_type: selectedType,
-        sweater: selectedSweater
-      })
-    });
-    const d = await res.json();
-    if (d.ok) {
-      $("prompt-result").classList.remove("hidden");
-      $("result-title").textContent = d.prompt_label;
-      $("result-sub").textContent = d.product + " · Sweater " + d.sweater;
-      $("prompt-text").textContent = d.prompt;
-      $("prompt-result").scrollIntoView({ behavior: "smooth", block: "start" });
+    // Convert photos to base64 for Apps Script
+    const photosB64 = await Promise.all(uploadedPhotos.map(f => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve({ b64: reader.result.split(',')[1], mime: f.type || 'image/jpeg' });
+      reader.onerror = reject;
+      reader.readAsDataURL(f);
+    })));
+
+    const data = await apiFetch({ action: 'generate-prompt', mode, nama, warna, pegang, sweater, detail, photos: photosB64 });
+    if (!data.ok) throw new Error(data.detail || data.error || 'Gagal generate');
+
+    const output = document.getElementById('promptOutput');
+    const outFoto = document.getElementById('outFoto');
+    const outVideo = document.getElementById('outVideo');
+
+    if (data.mode === 'foto') {
+      outFoto.style.display = 'block';
+      outVideo.style.display = 'none';
+      document.getElementById('promptFotoText').textContent = data.prompt;
     } else {
-      toast("❌ " + (d.detail || "Gagal generate"), false);
+      outFoto.style.display = 'none';
+      outVideo.style.display = 'block';
+      document.getElementById('promptScene1Text').textContent = data.scene1;
+      document.getElementById('promptScene2Text').textContent = data.scene2;
     }
-  } catch(e) { toast("❌ Error", false); }
+
+    output.style.display = 'block';
+    output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Prompt berhasil di-generate!', 'success');
+
+  } catch(e) {
+    showToast('Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg> Generate Prompt`;
+  }
 }
 
-function resetPromptView() {
-  $("prompt-list-view").classList.remove("hidden");
-  $("prompt-detail-view").classList.add("hidden");
-  selectedProduct = null;
-  selectedType = null;
-}
-
-$("btn-back-products").onclick = resetPromptView;
-
-$("btn-copy-prompt").onclick = () => {
-  const text = $("prompt-text").textContent;
+function copyPrompt(id, btn) {
+  const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(() => {
-    toast("📋 Prompt copied!", true);
-  }).catch(() => {
-    const ta = document.createElement("textarea");
-    ta.value = text; document.body.appendChild(ta);
-    ta.select(); document.execCommand("copy");
-    document.body.removeChild(ta);
-    toast("📋 Prompt copied!", true);
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`;
+    }, 2000);
+    showToast('Prompt disalin!', 'success');
   });
-};
-
-$("btn-copy-upload").onclick = () => {
-  const text = $("prompt-text").textContent;
-  const uploadHint = 'Image 1 = product reference, Image 2 = background reference\n\n';
-  const full = text.startsWith('Image 1') ? text : uploadHint + text;
-  navigator.clipboard.writeText(full).then(() => {
-    toast("📋 Copied! Upload foto produk dulu, baru lantai", true);
-  }).catch(() => {
-    const ta = document.createElement("textarea");
-    ta.value = full; document.body.appendChild(ta);
-    ta.select(); document.execCommand("copy");
-    document.body.removeChild(ta);
-    toast("📋 Copied! Upload foto produk dulu, baru lantai", true);
-  });
-};
-
-// ═══ Init ═══
-loadStats();
-loadProducts();
+}
 </script>
 </body>
 </html>
