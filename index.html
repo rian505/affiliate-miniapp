@@ -698,36 +698,20 @@
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
       </div>
-      Info Produk
+      Warna Sweater
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>Nama Produk</label>
-        <input type="text" id="prodNama" placeholder="cth: Lanoes flat slide sandals">
-      </div>
-      <div class="form-group">
-        <label>Warna Produk</label>
-        <input type="text" id="prodWarna" placeholder="cth: dark chocolate brown glossy patent">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Cara Pegang</label>
-        <input type="text" id="prodPegang" placeholder="cth: one hand grips sandal from below, other cradles sides">
-      </div>
-      <div class="form-group">
-        <label>Warna Sweater</label>
-        <input type="text" id="prodSweater" value="blue" placeholder="blue / white">
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Detail Produk (opsional — hardware, stitching, texture)</label>
-      <input type="text" id="prodDetail" placeholder="cth: gold rectangular buckle, white contrast stitching all edges">
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn btn-primary sweater-btn active" id="sweaterBlue" onclick="setSweater('blue')" style="flex:1">
+        🔵 Biru
+      </button>
+      <button class="btn btn-ghost sweater-btn" id="sweaterWhite" onclick="setSweater('white')" style="flex:1">
+        ⚪ Putih
+      </button>
     </div>
 
     <hr class="divider">
-    <button class="btn btn-primary" id="generateBtn" onclick="generatePrompt()">
+    <button class="btn btn-primary btn-full" id="generateBtn" onclick="generatePrompt()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
       Generate Prompt
     </button>
@@ -1004,6 +988,15 @@ async function submitToSheets() {
 }
 
 // ─── FITUR 2: UPLOAD & PROMPT ────────────────
+let selectedSweater = 'blue';
+
+function setSweater(color) {
+  selectedSweater = color;
+  document.getElementById('sweaterBlue').classList.toggle('active', color === 'blue');
+  document.getElementById('sweaterBlue').className = color === 'blue' ? 'btn btn-primary sweater-btn active' : 'btn btn-ghost sweater-btn';
+  document.getElementById('sweaterWhite').classList.toggle('active', color === 'white');
+  document.getElementById('sweaterWhite').className = color === 'white' ? 'btn btn-primary sweater-btn active' : 'btn btn-ghost sweater-btn';
+}
 function handlePhotos(files) {
   // Append new files to existing ones (don't replace)
   const newFiles = Array.from(files);
@@ -1080,31 +1073,22 @@ zone.addEventListener('drop', e => {
 });
 
 async function generatePrompt() {
-  const nama = document.getElementById('prodNama').value.trim();
-  const warna = document.getElementById('prodWarna').value.trim();
-  const pegang = document.getElementById('prodPegang').value.trim();
-  const sweater = document.getElementById('prodSweater').value.trim() || 'blue';
-  const detail = document.getElementById('prodDetail').value.trim();
-
-  if (!nama) { showToast('Isi nama produk dulu!', 'error'); return; }
   if (!uploadedPhotos.length) { showToast('Upload foto dulu!', 'error'); return; }
 
   const mode = uploadedPhotos.length >= 2 ? 'foto' : 'video';
+  const sweater = selectedSweater;
   const btn = document.getElementById('generateBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="loading-spinner"></span> Generating...';
 
   try {
-    // Convert photos to base64 for Apps Script
-    const photosB64 = await Promise.all(uploadedPhotos.map(f => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve({ b64: reader.result.split(',')[1], mime: f.type || 'image/jpeg' });
-      reader.onerror = reject;
-      reader.readAsDataURL(f);
-    })));
-
-    const data = await apiFetch({ action: 'generate-prompt', mode, nama, warna, pegang, sweater, detail, photos: photosB64 });
-    if (!data.ok) throw new Error(data.detail || data.error || 'Gagal generate');
+    const res = await fetch('/generate-prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'generate-prompt', mode, nama: '[NAMA PRODUK]', warna: '[WARNA PRODUK]', pegang: '[CARA PEGANG]', sweater, detail: '[DETAIL PRODUK]' }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.detail || 'Gagal generate');
 
     const output = document.getElementById('promptOutput');
     const outFoto = document.getElementById('outFoto');
@@ -1123,7 +1107,7 @@ async function generatePrompt() {
 
     output.style.display = 'block';
     output.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    showToast('Prompt berhasil di-generate!', 'success');
+    showToast('Prompt berhasil di-generate! Copy dan isi [PLACEHOLDER] sesuai produk lo.', 'success');
 
   } catch(e) {
     showToast('Error: ' + e.message, 'error');
