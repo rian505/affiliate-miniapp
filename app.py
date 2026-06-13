@@ -17,14 +17,15 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
 # ---- Config ----
-BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
+BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 ALLOWED_USERS = {
     u.strip() for u in os.environ.get("TELEGRAM_ALLOWED_USERS", "").split(",") if u.strip()
 }
 SHEET_ID = os.environ.get("AFFILIATE_SHEET_ID", "18hYBq3q4osQ2h3FgFB2LysCQDA6gsYGAnMKgzWGT4L0")
 SHEET_TAB = "Produk Affiliate"
-TOKEN_PATH = os.path.expanduser("~/.hermes/google_token.json")
+TOKEN_PATH = os.environ.get("GOOGLE_TOKEN_PATH", os.path.expanduser("~/.hermes/google_token.json"))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SHEETS_ENABLED = bool(os.environ.get("GOOGLE_TOKEN_PATH") or os.path.exists(os.path.expanduser("~/.hermes/google_token.json")))
 
 app = FastAPI(title="MINJI Tools")
 
@@ -331,12 +332,16 @@ def validate_init_data(init_data: str, max_age: int = 86400) -> dict:
 # GOOGLE SHEETS
 # =====================================================================
 def get_sheets_service():
+    if not SHEETS_ENABLED:
+        return None
     creds = Credentials.from_authorized_user_file(TOKEN_PATH)
     return build("sheets", "v4", credentials=creds)
 
 
 def append_rows(rows: list):
     svc = get_sheets_service()
+    if not svc:
+        raise HTTPException(503, "Google Sheets not configured on this server")
     svc.spreadsheets().values().append(
         spreadsheetId=SHEET_ID,
         range=f"{SHEET_TAB}!A:H",
@@ -394,8 +399,11 @@ class PromptRequest(BaseModel):
 # =====================================================================
 @app.get("/", response_class=HTMLResponse)
 def index():
-    with open(os.path.join(BASE_DIR, "index.html"), encoding="utf-8") as f:
-        return f.read()
+    try:
+        with open(os.path.join(BASE_DIR, "index.html"), encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return HTMLResponse("<h1>MINJI Tools</h1><p>index.html not found. Check deployment.</p>", status_code=500)
 
 
 # =====================================================================
@@ -403,7 +411,7 @@ def index():
 # =====================================================================
 @app.post("/submit")
 async def submit(entry: Entry):
-    user = validate_init_data(entry.initData)
+    user = validate_init_data(entry.initData) if BOT_TOKEN else {"first_name": "user"}
     if not entry.link_tokopedia.strip() or not entry.produk.strip():
         raise HTTPException(422, "Link Tokopedia & Produk wajib diisi")
 
@@ -417,7 +425,7 @@ async def submit(entry: Entry):
 
 @app.post("/submit-bulk")
 async def submit_bulk(entry: BulkEntry):
-    user = validate_init_data(entry.initData)
+    user = validate_init_data(entry.initData) if BOT_TOKEN else {"first_name": "user"}
     rows = []
     skipped = 0
     for it in entry.items:
@@ -436,7 +444,16 @@ async def submit_bulk(entry: BulkEntry):
 
 @app.post("/stats")
 async def stats(entry: AuthOnly):
-    validate_init_data(entry.initData)
+    if BOT_TOKEN:
+        validate_init_data(entry.initData)
+
+    if not SHEETS_ENABLED:
+        return JSONResponse({
+            "ok": True, "total": 0, "sudah": 0, "belum": 0,
+            "kategori": [], "recent": [],
+            "note": "Google Sheets not configured — showing demo data"
+        })
+
     try:
         svc = get_sheets_service()
         r = svc.spreadsheets().values().get(
