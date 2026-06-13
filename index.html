@@ -1006,9 +1006,13 @@ async function submitToSheets() {
 
 // ─── FITUR 2: UPLOAD & PROMPT ────────────────
 function handlePhotos(files) {
-  uploadedPhotos = Array.from(files);
+  // Append new files to existing ones (don't replace)
+  const newFiles = Array.from(files);
+  uploadedPhotos = [...uploadedPhotos, ...newFiles];
   renderPhotoPreviews();
   updateMode();
+  // Reset input so same file can be selected again
+  document.getElementById('photoInput').value = '';
 }
 
 function renderPhotoPreviews() {
