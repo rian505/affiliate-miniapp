@@ -191,3 +191,30 @@ async def api_handler(request: Request):
 @app.get("/health")
 def health():
     return {"ok": True, "app": "MINJI Tools"}
+
+
+@app.post("/generate-prompt")
+async def generate_prompt_endpoint(request: Request):
+    """Generate prompt from user input."""
+    try:
+        body = await request.json()
+    except Exception:
+        raise HTTPException(400, "Invalid JSON")
+
+    mode = body.get("mode", "foto")
+    nama = body.get("nama", "").strip()
+    warna = body.get("warna", "").strip()
+    pegang = body.get("pegang", "").strip()
+    sweater = body.get("sweater", "blue").strip()
+    detail = body.get("detail", "").strip()
+
+    if not nama:
+        return JSONResponse({"ok": False, "detail": "Nama produk wajib diisi"})
+
+    if mode == "foto":
+        prompt = gen_photo_prompt(nama, warna, pegang, sweater, detail)
+        return JSONResponse({"ok": True, "mode": "foto", "prompt": prompt})
+    else:
+        scene1 = gen_scene1_prompt(nama, warna, pegang, sweater, detail)
+        scene2 = gen_scene2_prompt(nama, warna, sweater, detail)
+        return JSONResponse({"ok": True, "mode": "video", "scene1": scene1, "scene2": scene2})

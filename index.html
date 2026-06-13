@@ -809,7 +809,7 @@
 
 <script>
 // ─── CONFIG — ganti dengan URL Apps Script kamu ──────────────────────────────
-const API_URL = "";  // Same origin — calls our FastAPI backend
+const API_URL = "https://script.google.com/macros/s/AKfycbzf-xYrZPm9SReOlYMksljhzw6LR3kXoE-pDy3lQt8jMSIRCUd_SV-hKjiMofc1o_0TRQ/exec";
 // Contoh: "https://script.google.com/macros/s/AKfycbxxx/exec"
 
 // ─── STATE ───────────────────────────────────
@@ -817,10 +817,21 @@ let parsedProducts = [];
 let uploadedPhotos = [];
 
 async function apiFetch(body) {
-  const res = await fetch(API_URL + '/', {
+  // Prompt generation goes to our backend
+  if (body.action === 'generate-prompt') {
+    const res = await fetch('/generate-prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  }
+  // Sheets submit goes to Apps Script
+  const res = await fetch(API_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'text/plain' }, // Apps Script CORS workaround
     body: JSON.stringify(body),
+    redirect: 'follow',
   });
   return res.json();
 }
