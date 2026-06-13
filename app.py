@@ -193,6 +193,28 @@ def health():
     return {"ok": True, "app": "MINJI Tools"}
 
 
+@app.post("/sheets")
+async def sheets_proxy(request: Request):
+    """Proxy requests to Apps Script to avoid CORS issues."""
+    import httpx
+    APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLVRazxD8tdkKkpIfph-iJYuwmV-_lAC2PnYCq85M-PBYoItzQh7qnQq-yGr1NJYuAdw/exec"
+    try:
+        body = await request.json()
+    except Exception:
+        raise HTTPException(400, "Invalid JSON")
+
+    async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
+        try:
+            r = await client.post(
+                APPS_SCRIPT_URL,
+                json=body,
+                headers={"Content-Type": "text/plain"},
+            )
+            return JSONResponse(status_code=200, content=r.json())
+        except Exception as e:
+            return JSONResponse(status_code=500, content={"ok": False, "detail": str(e)})
+
+
 @app.post("/generate-prompt")
 async def generate_prompt_endpoint(request: Request):
     """Generate prompt from user input."""

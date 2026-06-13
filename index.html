@@ -826,12 +826,11 @@ async function apiFetch(body) {
     });
     return res.json();
   }
-  // Sheets submit goes to Apps Script
-  const res = await fetch(API_URL, {
+  // Sheets submit goes through our proxy (avoids CORS)
+  const res = await fetch('/sheets', {
     method: 'POST',
-    headers: { 'Content-Type': 'text/plain' }, // Apps Script CORS workaround
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
-    redirect: 'follow',
   });
   return res.json();
 }
