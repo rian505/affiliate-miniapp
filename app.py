@@ -49,28 +49,34 @@ def append_rows(rows: list):
 # =====================================================================
 def gen_photo_prompt(nama, warna, pegang, sweater, detail):
     """Generate Gemini photo prompt from user input."""
-    deskripsi = f"{warna} {nama}"
+    parts = [warna, nama] if warna else [nama]
+    deskripsi = " ".join(p for p in parts if p)
     if detail:
         deskripsi += f" with {detail}"
+
+    pegang_clause = f"{pegang} — " if pegang else ""
 
     return f"""Image 1 = product reference, Image 2 = background reference
 
 I am providing TWO reference images. Image 2 is the BACKGROUND — keep it 100% identical, do not change anything about it. Image 1 is the product to place into the scene. Do not replace, recreate, or modify the background floor, lighting, shadows, wall, or color tone in any way whatsoever. Only add the hands and {nama} naturally into the existing background scene.
 
-Into this EXACT background, add: two real human hands with fair warm-toned Southeast Asian skin, short nude pink nails, wearing {sweater} ribbed knit sweater sleeves — {pegang} — {deskripsi}. Do not alter the shape, size, texture, or any detail of the product in any way. Lighting, shadow, and skin tone of hands must blend seamlessly with the existing warm golden background light. Looks like a real photo taken in that exact room, not AI-generated. TikTok affiliate style. 9:16 vertical. No text, no watermark."""
+Into this EXACT background, add: two real human hands with fair warm-toned Southeast Asian skin, short nude pink nails, wearing {sweater} ribbed knit sweater sleeves — {pegang_clause}{deskripsi}. Do not alter the shape, size, texture, or any detail of the product in any way. Lighting, shadow, and skin tone of hands must blend seamlessly with the existing warm golden background light. Looks like a real photo taken in that exact room, not AI-generated. TikTok affiliate style. 9:16 vertical. No text, no watermark."""
 
 
 def gen_scene1_prompt(nama, warna, pegang, sweater, detail):
     """Generate Google Flow Scene 1 — Reveal prompt."""
-    deskripsi = f"{warna} {nama}"
+    parts = [warna, nama] if warna else [nama]
+    deskripsi = " ".join(p for p in parts if p)
     if detail:
         deskripsi += f" with {detail}"
+
+    pegang_clause = f"{pegang}. " if pegang else ""
 
     return f"""Image 1 = product reference, Image 2 = background reference
 
 Animate or generate this as a natural 8-second video. Image 2 is the BACKGROUND — keep it 100% identical. Image 1 is the product.
 
-A young woman's both hands with fair warm-toned Southeast Asian skin, short nude pink nails, wearing {sweater} ribbed knit sweater sleeves — slowly lifting {deskripsi} into frame from below naturally. {pegang}. Movement is slow, gentle, slightly swaying — like casually revealing a new purchase to camera. Background EXACTLY as Image 2 — do not change floor, lighting, shadows, wall in any way. Lighting and shadows blend naturally with warm golden room light. Slightly handheld feel, soft natural bokeh, warm golden daylight. Casual TikTok affiliate haul mood. Not HD, not studio-lit. No text, no voiceover, no watermark. 9:16 vertical. 8 seconds."""
+A young woman's both hands with fair warm-toned Southeast Asian skin, short nude pink nails, wearing {sweater} ribbed knit sweater sleeves — slowly lifting {deskripsi} into frame from below naturally. {pegang_clause}Movement is slow, gentle, slightly swaying — like casually revealing a new purchase to camera. Background EXACTLY as Image 2 — do not change floor, lighting, shadows, wall in any way. Lighting and shadows blend naturally with warm golden room light. Slightly handheld feel, soft natural bokeh, warm golden daylight. Casual TikTok affiliate haul mood. Not HD, not studio-lit. No text, no voiceover, no watermark. 9:16 vertical. 8 seconds."""
 
 
 def gen_scene2_prompt(nama, warna, sweater, detail):
