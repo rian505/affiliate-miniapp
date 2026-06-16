@@ -664,44 +664,78 @@
     <p class="page-desc">Upload foto produk — MINJI generate prompt siap pakai untuk Gemini & Google Flow.</p>
   </div>
 
-  <!-- Upload Section -->
+  <!-- ═══ UPLOAD FOTO (GEMINI) ═══ -->
   <div class="card">
     <div class="card-title">
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
       </div>
-      Upload Foto
+      Upload Foto — Gemini
     </div>
 
     <div class="alert alert-info">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <div><strong>2+ foto</strong> → 1 prompt untuk <strong>Gemini (foto)</strong> &nbsp;|&nbsp; <strong>1 foto</strong> → 2 prompt untuk <strong>Google Flow (video)</strong></div>
+      <div>Upload <strong>2+ foto</strong> (produk &amp; background) → 1 prompt untuk <strong>Gemini image generation</strong>.</div>
     </div>
 
-    <div class="upload-zone" id="uploadZone">
-      <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotos(this.files)">
+    <div class="upload-zone" id="uploadZoneFoto">
+      <input type="file" id="fotoInput" accept="image/*" multiple onchange="handleFotoPhotos(this.files)">
       <div class="upload-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
       </div>
       <div class="upload-title">Klik atau seret foto di sini</div>
-      <div class="upload-hint">JPG, PNG, WEBP — bisa pilih lebih dari 1</div>
-      <div class="upload-mode-badge" id="modeBadge">Pilih foto dulu</div>
+      <div class="upload-hint">JPG, PNG, WEBP — pilih 2+ (produk &amp; background)</div>
+      <div class="upload-mode-badge" id="modeBadgeFoto">Pilih foto dulu</div>
     </div>
 
-    <!-- Photo Previews -->
-    <div class="photo-previews" id="photoPreviews"></div>
+    <div class="photo-previews" id="fotoPreviews"></div>
+
+    <div id="fotoGenCard" style="display:none">
+      <hr class="divider">
+      <button class="btn btn-primary btn-full" onclick="generateFotoPrompt()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Generate Prompt Foto
+      </button>
+    </div>
   </div>
 
-  <!-- Generate Button -->
-  <div class="card" id="productInfoCard" style="display:none">
-    <button class="btn btn-primary btn-full" id="generateBtn" onclick="generatePrompt()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
-      Generate Prompt
-    </button>
+  <!-- ═══ UPLOAD VIDEO (GOOGLE FLOW) ═══ -->
+  <div class="card">
+    <div class="card-title">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      </div>
+      Upload Video — Google Flow
+    </div>
+
+    <div class="alert alert-info">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>Upload <strong>1 foto</strong> (produk) → 2 prompt scene untuk <strong>Google Flow video</strong>.</div>
+    </div>
+
+    <div class="upload-zone" id="uploadZoneVideo">
+      <input type="file" id="videoInput" accept="image/*" onchange="handleVideoPhoto(this.files)">
+      <div class="upload-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      </div>
+      <div class="upload-title">Klik atau seret foto di sini</div>
+      <div class="upload-hint">JPG, PNG, WEBP — 1 foto produk aja</div>
+      <div class="upload-mode-badge" id="modeBadgeVideo">Pilih foto dulu</div>
+    </div>
+
+    <div class="photo-previews" id="videoPreviews"></div>
+
+    <div id="videoGenCard" style="display:none">
+      <hr class="divider">
+      <button class="btn btn-primary btn-full" onclick="generateVideoPrompt()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        Generate Prompt Video
+      </button>
+    </div>
   </div>
 
   <!-- Output -->
-  <div id="promptOutput" style="display:none">
+  <div id="promptOutput">
 
     <!-- FOTO MODE -->
     <div id="outFoto" style="display:none">
@@ -781,7 +815,6 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzLVRazxD8tdkKkpIfph-iJ
 
 // ─── STATE ───────────────────────────────────
 let parsedProducts = [];
-let uploadedPhotos = [];
 
 async function apiFetch(body) {
   // Prompt generation goes to our backend
@@ -970,51 +1003,47 @@ async function submitToSheets() {
   }
 }
 
-// ─── FITUR 2: UPLOAD & PROMPT ────────────────
-let selectedSweater = 'blue';
+// ─── FITUR 2: UPLOAD & PROMPT (TERPISAH) ──────
+let fotoPhotos = [];
+let videoPhoto = null;
 
-function setSweater(color) {
-  selectedSweater = color;
-  document.getElementById('sweaterBlue').classList.toggle('active', color === 'blue');
-  document.getElementById('sweaterBlue').className = color === 'blue' ? 'btn btn-primary sweater-btn active' : 'btn btn-ghost sweater-btn';
-  document.getElementById('sweaterWhite').classList.toggle('active', color === 'white');
-  document.getElementById('sweaterWhite').className = color === 'white' ? 'btn btn-primary sweater-btn active' : 'btn btn-ghost sweater-btn';
-}
-function handlePhotos(files) {
-  // Append new files to existing ones (don't replace)
+function handleFotoPhotos(files) {
   const newFiles = Array.from(files);
-  uploadedPhotos = [...uploadedPhotos, ...newFiles];
-  renderPhotoPreviews();
-  updateMode();
-  // Reset input so same file can be selected again
-  document.getElementById('photoInput').value = '';
+  fotoPhotos = [...fotoPhotos, ...newFiles];
+  renderFotoPreviews();
+  updateFotoMode();
+  document.getElementById('fotoInput').value = '';
 }
 
-function renderPhotoPreviews() {
-  const container = document.getElementById('photoPreviews');
-  const infoCard = document.getElementById('productInfoCard');
+function handleVideoPhoto(files) {
+  videoPhoto = files[0] || null;
+  renderVideoPreview();
+  updateVideoMode();
+  document.getElementById('videoInput').value = '';
+}
+
+function renderFotoPreviews() {
+  const container = document.getElementById('fotoPreviews');
+  const genCard = document.getElementById('fotoGenCard');
 
   container.innerHTML = '';
-  if (!uploadedPhotos.length) {
-    infoCard.style.display = 'none';
+  if (!fotoPhotos.length) {
+    genCard.style.display = 'none';
+    document.getElementById('outFoto').style.display = 'none';
     return;
   }
+  genCard.style.display = 'block';
+  document.getElementById('outFoto').style.display = 'none';
 
-  infoCard.style.display = 'block';
-  document.getElementById('promptOutput').style.display = 'none';
-
-  uploadedPhotos.forEach((file, i) => {
+  fotoPhotos.forEach((file, i) => {
     const url = URL.createObjectURL(file);
-    const labels = uploadedPhotos.length >= 2
-      ? (i === 0 ? 'PRODUK' : i === 1 ? 'BACKGROUND' : `FOTO ${i+1}`)
-      : 'PRODUK';
-
+    const label = i === 0 ? 'PRODUK' : i === 1 ? 'BACKGROUND' : `FOTO ${i+1}`;
     const div = document.createElement('div');
     div.className = 'photo-thumb';
     div.innerHTML = `
       <img src="${url}" alt="Foto ${i+1}">
-      <div class="thumb-label">${labels}</div>
-      <button class="thumb-remove" onclick="removePhoto(${i})">
+      <div class="thumb-label">${label}</div>
+      <button class="thumb-remove" onclick="removeFotoPhoto(${i})">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     `;
@@ -1022,45 +1051,95 @@ function renderPhotoPreviews() {
   });
 }
 
-function removePhoto(i) {
-  uploadedPhotos.splice(i, 1);
-  renderPhotoPreviews();
-  updateMode();
+function renderVideoPreview() {
+  const container = document.getElementById('videoPreviews');
+  const genCard = document.getElementById('videoGenCard');
+
+  container.innerHTML = '';
+  if (!videoPhoto) {
+    genCard.style.display = 'none';
+    document.getElementById('outVideo').style.display = 'none';
+    return;
+  }
+  genCard.style.display = 'block';
+  document.getElementById('outVideo').style.display = 'none';
+
+  const url = URL.createObjectURL(videoPhoto);
+  const div = document.createElement('div');
+  div.className = 'photo-thumb';
+  div.innerHTML = `
+    <img src="${url}" alt="Foto Produk">
+    <div class="thumb-label">PRODUK</div>
+    <button class="thumb-remove" onclick="removeVideoPhoto()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+  container.appendChild(div);
 }
 
-function updateMode() {
-  const badge = document.getElementById('modeBadge');
-  const n = uploadedPhotos.length;
+function removeFotoPhoto(i) {
+  fotoPhotos.splice(i, 1);
+  renderFotoPreviews();
+  updateFotoMode();
+}
+
+function removeVideoPhoto() {
+  videoPhoto = null;
+  renderVideoPreview();
+  updateVideoMode();
+}
+
+function updateFotoMode() {
+  const badge = document.getElementById('modeBadgeFoto');
+  const n = fotoPhotos.length;
   if (n === 0) {
     badge.textContent = 'Pilih foto dulu';
     badge.style.background = 'var(--primary-xlight)';
-  } else if (n === 1) {
-    badge.textContent = '1 foto → 2 Prompt Video (Google Flow)';
-    badge.style.background = '#fff3cd';
-    badge.style.color = '#856404';
+    badge.style.color = '';
   } else {
-    badge.textContent = `${n} foto → 1 Prompt Foto (Gemini)`;
+    badge.textContent = `${n} foto siap — klik Generate Prompt Foto`;
     badge.style.background = 'var(--success-c)';
     badge.style.color = 'var(--success)';
   }
 }
 
-// Drag & drop
-const zone = document.getElementById('uploadZone');
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-zone.addEventListener('drop', e => {
+function updateVideoMode() {
+  const badge = document.getElementById('modeBadgeVideo');
+  if (!videoPhoto) {
+    badge.textContent = 'Pilih foto dulu';
+    badge.style.background = 'var(--primary-xlight)';
+    badge.style.color = '';
+  } else {
+    badge.textContent = '1 foto siap — klik Generate Prompt Video';
+    badge.style.background = '#fff3cd';
+    badge.style.color = '#856404';
+  }
+}
+
+// Drag & drop — FOTO
+const zoneFoto = document.getElementById('uploadZoneFoto');
+zoneFoto.addEventListener('dragover', e => { e.preventDefault(); zoneFoto.classList.add('drag-over'); });
+zoneFoto.addEventListener('dragleave', () => zoneFoto.classList.remove('drag-over'));
+zoneFoto.addEventListener('drop', e => {
   e.preventDefault();
-  zone.classList.remove('drag-over');
-  if (e.dataTransfer.files.length) handlePhotos(e.dataTransfer.files);
+  zoneFoto.classList.remove('drag-over');
+  if (e.dataTransfer.files.length) handleFotoPhotos(e.dataTransfer.files);
 });
 
-async function generatePrompt() {
-  if (!uploadedPhotos.length) { showToast('Upload foto dulu!', 'error'); return; }
+// Drag & drop — VIDEO
+const zoneVideo = document.getElementById('uploadZoneVideo');
+zoneVideo.addEventListener('dragover', e => { e.preventDefault(); zoneVideo.classList.add('drag-over'); });
+zoneVideo.addEventListener('dragleave', () => zoneVideo.classList.remove('drag-over'));
+zoneVideo.addEventListener('drop', e => {
+  e.preventDefault();
+  zoneVideo.classList.remove('drag-over');
+  if (e.dataTransfer.files.length) handleVideoPhoto(e.dataTransfer.files);
+});
 
-  const mode = uploadedPhotos.length >= 2 ? 'foto' : 'video';
-  const sweater = selectedSweater;
-  const btn = document.getElementById('generateBtn');
+async function generateFotoPrompt() {
+  if (fotoPhotos.length < 2) { showToast('Upload minimal 2 foto (produk & background)!', 'error'); return; }
+
+  const btn = event.currentTarget;
   btn.disabled = true;
   btn.innerHTML = '<span class="loading-spinner"></span> Generating...';
 
@@ -1068,35 +1147,53 @@ async function generatePrompt() {
     const res = await fetch('/generate-prompt', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'generate-prompt', mode, nama: '[NAMA PRODUK]', warna: '[WARNA PRODUK]', pegang: '[CARA PEGANG]', sweater, detail: '[DETAIL PRODUK]' }),
+      body: JSON.stringify({ action: 'generate-prompt', mode: 'foto', nama: '[NAMA PRODUK]', warna: '[WARNA PRODUK]', pegang: '[CARA PEGANG]', detail: '[DETAIL PRODUK]' }),
     });
     const data = await res.json();
     if (!data.ok) throw new Error(data.detail || 'Gagal generate');
 
-    const output = document.getElementById('promptOutput');
     const outFoto = document.getElementById('outFoto');
-    const outVideo = document.getElementById('outVideo');
-
-    if (data.mode === 'foto') {
-      outFoto.style.display = 'block';
-      outVideo.style.display = 'none';
-      document.getElementById('promptFotoText').textContent = data.prompt;
-    } else {
-      outFoto.style.display = 'none';
-      outVideo.style.display = 'block';
-      document.getElementById('promptScene1Text').textContent = data.scene1;
-      document.getElementById('promptScene2Text').textContent = data.scene2;
-    }
-
-    output.style.display = 'block';
-    output.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    showToast('Prompt berhasil di-generate! Copy dan isi [PLACEHOLDER] sesuai produk lo.', 'success');
+    document.getElementById('promptFotoText').textContent = data.prompt;
+    outFoto.style.display = 'block';
+    outFoto.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Prompt foto berhasil di-generate!', 'success');
 
   } catch(e) {
     showToast('Error: ' + e.message, 'error');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg> Generate Prompt`;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Generate Prompt Foto`;
+  }
+}
+
+async function generateVideoPrompt() {
+  if (!videoPhoto) { showToast('Upload 1 foto dulu!', 'error'); return; }
+
+  const btn = event.currentTarget;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span> Generating...';
+
+  try {
+    const res = await fetch('/generate-prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'generate-prompt', mode: 'video', nama: '[NAMA PRODUK]', warna: '[WARNA PRODUK]', pegang: '[CARA PEGANG]', detail: '[DETAIL PRODUK]' }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.detail || 'Gagal generate');
+
+    const outVideo = document.getElementById('outVideo');
+    document.getElementById('promptScene1Text').textContent = data.scene1;
+    document.getElementById('promptScene2Text').textContent = data.scene2;
+    outVideo.style.display = 'block';
+    outVideo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Prompt video berhasil di-generate!', 'success');
+
+  } catch(e) {
+    showToast('Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> Generate Prompt Video`;
   }
 }
 
