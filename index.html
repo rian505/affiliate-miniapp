@@ -664,41 +664,6 @@
     <p class="page-desc">Upload foto produk — MINJI generate prompt siap pakai untuk Gemini & Google Flow.</p>
   </div>
 
-  <!-- ═══ INFO PRODUK (SHARED) ═══ -->
-  <div class="card">
-    <div class="card-title">
-      <div class="icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-      </div>
-      Info Produk
-    </div>
-
-    <div class="alert alert-info">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <div>Isi detail produk di bawah — nilai ini akan menggantikan semua <code>[PLACEHOLDER]</code> di output prompt.</div>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Nama Produk <span class="req">*</span></label>
-      <input type="text" id="inputNama" class="form-input" placeholder='misal: "sweater rajut oversize"'>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Warna Produk</label>
-      <input type="text" id="inputWarna" class="form-input" placeholder='misal: "cream" / "hitam" / "dusty pink"'>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Cara Pegang</label>
-      <input type="text" id="inputPegang" class="form-input" placeholder='misal: "memegang dengan kedua tangan di bagian bawah"'>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Detail Produk</label>
-      <input type="text" id="inputDetail" class="form-input" placeholder='misal: "rib knit pattern, loose fit, cropped length"'>
-    </div>
-  </div>
-
   <!-- ═══ UPLOAD FOTO (GEMINI) ═══ -->
   <div class="card">
     <div class="card-title">
@@ -1042,15 +1007,6 @@ async function submitToSheets() {
 let fotoPhotos = [];
 let videoPhoto = null;
 
-function getProductInfo() {
-  return {
-    nama:    document.getElementById('inputNama').value.trim(),
-    warna:   document.getElementById('inputWarna').value.trim(),
-    pegang:  document.getElementById('inputPegang').value.trim(),
-    detail:  document.getElementById('inputDetail').value.trim(),
-  };
-}
-
 function handleFotoPhotos(files) {
   const newFiles = Array.from(files);
   fotoPhotos = [...fotoPhotos, ...newFiles];
@@ -1181,8 +1137,6 @@ zoneVideo.addEventListener('drop', e => {
 });
 
 async function generateFotoPrompt() {
-  const info = getProductInfo();
-  if (!info.nama) { showToast('Isi Nama Produk dulu di card Info Produk!', 'error'); document.getElementById('inputNama').focus(); return; }
   if (fotoPhotos.length < 2) { showToast('Upload minimal 2 foto (produk & background)!', 'error'); return; }
 
   const btn = event.currentTarget;
@@ -1193,7 +1147,7 @@ async function generateFotoPrompt() {
     const res = await fetch('/generate-prompt', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'generate-prompt', mode: 'foto', ...info }),
+      body: JSON.stringify({ action: 'generate-prompt', mode: 'foto' }),
     });
     const data = await res.json();
     if (!data.ok) throw new Error(data.detail || 'Gagal generate');
@@ -1213,8 +1167,6 @@ async function generateFotoPrompt() {
 }
 
 async function generateVideoPrompt() {
-  const info = getProductInfo();
-  if (!info.nama) { showToast('Isi Nama Produk dulu di card Info Produk!', 'error'); document.getElementById('inputNama').focus(); return; }
   if (!videoPhoto) { showToast('Upload 1 foto dulu!', 'error'); return; }
 
   const btn = event.currentTarget;
@@ -1225,7 +1177,7 @@ async function generateVideoPrompt() {
     const res = await fetch('/generate-prompt', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'generate-prompt', mode: 'video', ...info }),
+      body: JSON.stringify({ action: 'generate-prompt', mode: 'video' }),
     });
     const data = await res.json();
     if (!data.ok) throw new Error(data.detail || 'Gagal generate');

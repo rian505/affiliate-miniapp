@@ -45,45 +45,24 @@ def append_rows(rows: list):
 
 
 # =====================================================================
-# PROMPT GENERATION — from master prompt templates
+# PROMPT GENERATION — clean English master prompts (no placeholders)
+# AI model (Gemini / Google Flow) reads the image and fills in product details.
 # =====================================================================
-def gen_photo_prompt(nama, warna, pegang, sweater, detail):
-    """Generate Gemini photo prompt from user input."""
-    parts = [warna, nama] if warna else [nama]
-    deskripsi = " ".join(p for p in parts if p)
-    if detail:
-        deskripsi += f" with {detail}"
+PHOTO_PROMPT = """Image 1 = product reference, Image 2 = background reference
 
-    pegang_clause = f"{pegang} — " if pegang else ""
+I am providing TWO reference images. Image 2 is the BACKGROUND — keep it 100% identical, do not change anything about it. Image 1 is the product to place into the scene. Do not replace, recreate, or modify the background floor, lighting, shadows, wall, or color tone in any way whatsoever. Only add the hands and the product naturally into the existing background scene.
 
-    return f"""Image 1 = product reference, Image 2 = background reference
-
-I am providing TWO reference images. Image 2 is the BACKGROUND — keep it 100% identical, do not change anything about it. Image 1 is the product to place into the scene. Do not replace, recreate, or modify the background floor, lighting, shadows, wall, or color tone in any way whatsoever. Only add the hands and {nama} naturally into the existing background scene.
-
-Into this EXACT background, add: two real human hands with fair warm-toned Southeast Asian skin, short nude pink nails, wearing {sweater} ribbed knit sweater sleeves — {pegang_clause}{deskripsi}. Do not alter the shape, size, texture, or any detail of the product in any way. Lighting, shadow, and skin tone of hands must blend seamlessly with the existing warm golden background light. Looks like a real photo taken in that exact room, not AI-generated. TikTok affiliate style. 9:16 vertical. No text, no watermark."""
+Into this EXACT background, add: two real human hands with fair warm-toned Southeast Asian skin, short nude pink nails, wearing blue ribbed knit sweater sleeves — naturally holding the product. Do not alter the shape, size, texture, or any detail of the product in any way. Lighting, shadow, and skin tone of hands must blend seamlessly with the existing warm golden background light. Looks like a real photo taken in that exact room, not AI-generated. TikTok affiliate style. 9:16 vertical. No text, no watermark."""
 
 
-def gen_scene1_prompt(nama, warna, pegang, sweater, detail):
-    """Generate Google Flow Scene 1 — Reveal prompt."""
-    parts = [warna, nama] if warna else [nama]
-    deskripsi = " ".join(p for p in parts if p)
-    if detail:
-        deskripsi += f" with {detail}"
-
-    pegang_clause = f"{pegang}. " if pegang else ""
-
-    return f"""Image 1 = product reference, Image 2 = background reference
+VIDEO_SCENE1_PROMPT = """Image 1 = product reference, Image 2 = background reference
 
 Animate or generate this as a natural 8-second video. Image 2 is the BACKGROUND — keep it 100% identical. Image 1 is the product.
 
-A young woman's both hands with fair warm-toned Southeast Asian skin, short nude pink nails, wearing {sweater} ribbed knit sweater sleeves — slowly lifting {deskripsi} into frame from below naturally. {pegang_clause}Movement is slow, gentle, slightly swaying — like casually revealing a new purchase to camera. Background EXACTLY as Image 2 — do not change floor, lighting, shadows, wall in any way. Lighting and shadows blend naturally with warm golden room light. Slightly handheld feel, soft natural bokeh, warm golden daylight. Casual TikTok affiliate haul mood. Not HD, not studio-lit. No text, no voiceover, no watermark. 9:16 vertical. 8 seconds."""
+A young woman's both hands with fair warm-toned Southeast Asian skin, short nude pink nails, wearing blue ribbed knit sweater sleeves — slowly lifting the product into frame from below naturally. Movement is slow, gentle, slightly swaying — like casually revealing a new purchase to camera. Background EXACTLY as Image 2 — do not change floor, lighting, shadows, wall in any way. Lighting and shadows blend naturally with warm golden room light. Slightly handheld feel, soft natural bokeh, warm golden daylight. Casual TikTok affiliate haul mood. Not HD, not studio-lit. No text, no voiceover, no watermark. 9:16 vertical. 8 seconds."""
 
 
-def gen_scene2_prompt(nama, warna, sweater, detail):
-    """Generate Google Flow Scene 2 — Detail Close Up prompt."""
-    detail_text = detail if detail else f"the texture, color, and finish of the {nama}"
-
-    return f"""Continuing from previous shot — same {nama}, same fair warm-toned hands, nude pink nails, same {sweater} ribbed knit sweater sleeves, same warm oak wood floor with golden sunlight patches — do not change background. Camera slowly drifts close-up across {detail_text}. Movement dreamy and slow. One hand holds steady, other hand rotates slightly for detail view. Soft bokeh, warm golden daylight, slight film grain. Not HD. No text, no voiceover, no watermark. 9:16 vertical. 8 seconds."""
+VIDEO_SCENE2_PROMPT = """Continuing from previous shot — same product, same fair warm-toned hands, nude pink nails, same blue ribbed knit sweater sleeves, same warm oak wood floor with golden sunlight patches — do not change background. Camera slowly drifts close-up across the product details. Movement dreamy and slow. One hand holds steady, other hand rotates slightly for detail view. Soft bokeh, warm golden daylight, slight film grain. Not HD. No text, no voiceover, no watermark. 9:16 vertical. 8 seconds."""
 
 
 # =====================================================================
@@ -138,22 +117,10 @@ async def api_handler(request: Request):
     # ── ACTION: generate-prompt ──
     elif action == "generate-prompt":
         mode = body.get("mode", "foto")
-        nama = body.get("nama", "").strip()
-        warna = body.get("warna", "").strip()
-        pegang = body.get("pegang", "").strip()
-        sweater = body.get("sweater", "blue").strip()
-        detail = body.get("detail", "").strip()
-
-        if not nama:
-            return JSONResponse({"ok": False, "detail": "Nama produk wajib diisi"})
-
         if mode == "foto":
-            prompt = gen_photo_prompt(nama, warna, pegang, sweater, detail)
-            return JSONResponse({"ok": True, "mode": "foto", "prompt": prompt})
+            return JSONResponse({"ok": True, "mode": "foto", "prompt": PHOTO_PROMPT})
         else:
-            scene1 = gen_scene1_prompt(nama, warna, pegang, sweater, detail)
-            scene2 = gen_scene2_prompt(nama, warna, sweater, detail)
-            return JSONResponse({"ok": True, "mode": "video", "scene1": scene1, "scene2": scene2})
+            return JSONResponse({"ok": True, "mode": "video", "scene1": VIDEO_SCENE1_PROMPT, "scene2": VIDEO_SCENE2_PROMPT})
 
     # ── ACTION: stats ──
     elif action == "stats":
@@ -235,26 +202,15 @@ async def sheets_proxy(request: Request):
 
 @app.post("/generate-prompt")
 async def generate_prompt_endpoint(request: Request):
-    """Generate prompt from user input."""
+    """Generate prompt — returns clean English master prompt (no placeholders)."""
     try:
         body = await request.json()
     except Exception:
         raise HTTPException(400, "Invalid JSON")
 
     mode = body.get("mode", "foto")
-    nama = body.get("nama", "").strip()
-    warna = body.get("warna", "").strip()
-    pegang = body.get("pegang", "").strip()
-    sweater = body.get("sweater", "blue").strip()
-    detail = body.get("detail", "").strip()
-
-    if not nama:
-        return JSONResponse({"ok": False, "detail": "Nama produk wajib diisi"})
 
     if mode == "foto":
-        prompt = gen_photo_prompt(nama, warna, pegang, sweater, detail)
-        return JSONResponse({"ok": True, "mode": "foto", "prompt": prompt})
+        return JSONResponse({"ok": True, "mode": "foto", "prompt": PHOTO_PROMPT})
     else:
-        scene1 = gen_scene1_prompt(nama, warna, pegang, sweater, detail)
-        scene2 = gen_scene2_prompt(nama, warna, sweater, detail)
-        return JSONResponse({"ok": True, "mode": "video", "scene1": scene1, "scene2": scene2})
+        return JSONResponse({"ok": True, "mode": "video", "scene1": VIDEO_SCENE1_PROMPT, "scene2": VIDEO_SCENE2_PROMPT})
