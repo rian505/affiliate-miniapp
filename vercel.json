@@ -4,11 +4,16 @@
     {
       "src": "app.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(api|generate-prompt|sheets|sheets-read|products)(.*)", "dest": "app.py" },
+    { "src": "/api/(.*)", "dest": "app.py" },
+    { "src": "/generate-prompt", "dest": "app.py" },
+    { "src": "/sheets", "dest": "app.py" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
