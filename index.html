@@ -713,31 +713,23 @@
   <div class="page-header">
     <div class="page-eyebrow">Katalog</div>
     <h1 class="page-title">Daftar Produk</h1>
-    <p class="page-desc">Semua produk yang udah masuk ke spreadsheet — bisa dicari & langsung buka link.</p>
+    <p class="page-desc">Semua produk dari spreadsheet — bisa cari & langsung buka link.</p>
   </div>
 
-  <!-- Search -->
-  <div class="card" style="padding:12px 16px">
-    <div style="display:flex;gap:10px;align-items:center">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--outline);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="produkSearch" placeholder="Cari produk, warna, merk..." style="border:none;outline:none;font-size:14px;width:100%;background:transparent;font-family:'Inter',sans-serif" oninput="filterProduk()">
-      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('produkSearch').value='';filterProduk()">✕</button>
-    </div>
-  </div>
-
-  <!-- Stats row -->
-  <div class="stats-row" id="produkStats" style="display:none">
-    <div class="stat-item">
-      <div class="stat-value" id="psTotal">0</div>
-      <div class="stat-label">Total</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" id="psSudah">0</div>
-      <div class="stat-label">Sudah</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" id="psBelum">0</div>
-      <div class="stat-label">Belum</div>
+  <!-- Search + Stats -->
+  <div class="card" style="padding:14px 16px">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--outline);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="produkSearch" placeholder="Cari produk, warna, merk, kategori..." style="border:none;outline:none;font-size:13px;width:100%;background:transparent;font-family:'Inter',sans-serif" oninput="filterProduk()">
+      </div>
+      <div id="produkStatsInline" style="display:flex;gap:10px;font-size:12px;color:var(--outline)">
+        <span><b id="psTotal2">0</b> total</span>
+        <span>•</span>
+        <span style="color:#2e7d32"><b id="psSudah2">0</b> sudah</span>
+        <span>•</span>
+        <span style="color:#e65100"><b id="psBelum2">0</b> belum</span>
+      </div>
     </div>
   </div>
 
@@ -747,12 +739,28 @@
     Memuat produk...
   </div>
 
-  <!-- Product grid -->
-  <div id="produkGrid" style="display:grid;gap:12px;grid-template-columns:1fr"></div>
+  <!-- Table wrapper (scrollable on mobile) -->
+  <div id="produkTableWrap" style="display:none;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r-md);border:1px solid var(--border)">
+    <table id="produkTable" style="width:100%;border-collapse:collapse;font-size:13px;font-family:'Inter',sans-serif">
+      <thead>
+        <tr style="background:var(--primary-xlight);position:sticky;top:0;z-index:1">
+          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">#</th>
+          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Produk</th>
+          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Merk</th>
+          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Warna</th>
+          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Kategori</th>
+          <th style="padding:10px 12px;text-align:center;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Status</th>
+          <th style="padding:10px 12px;text-align:center;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Link</th>
+          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Tanggal</th>
+        </tr>
+      </thead>
+      <tbody id="produkTbody"></tbody>
+    </table>
+  </div>
 
   <!-- Empty state -->
   <div id="produkEmpty" style="display:none;text-align:center;padding:60px 0;color:var(--outline)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;margin-bottom:12px;opacity:0.3"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;margin-bottom:12px;opacity:0.3"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
     <p style="font-size:15px;font-weight:500">Belum ada produk</p>
     <p style="font-size:13px">Tambahin dulu lewat tab Spreadsheet</p>
   </div>
@@ -955,12 +963,11 @@ let allProduk = [];
 
 async function loadProduk() {
   const loading = document.getElementById('produkLoading');
-  const grid = document.getElementById('produkGrid');
+  const tableWrap = document.getElementById('produkTableWrap');
   const empty = document.getElementById('produkEmpty');
-  const stats = document.getElementById('produkStats');
 
   loading.style.display = 'block';
-  grid.innerHTML = '';
+  tableWrap.style.display = 'none';
   empty.style.display = 'none';
 
   try {
@@ -980,10 +987,9 @@ async function loadProduk() {
     // Stats
     const sudah = allProduk.filter(p => (p.status || '').toLowerCase().includes('sudah') || (p.status || '').includes('✅')).length;
     const belum = allProduk.length - sudah;
-    document.getElementById('psTotal').textContent = allProduk.length;
-    document.getElementById('psSudah').textContent = sudah;
-    document.getElementById('psBelum').textContent = belum;
-    stats.style.display = 'flex';
+    document.getElementById('psTotal2').textContent = allProduk.length;
+    document.getElementById('psSudah2').textContent = sudah;
+    document.getElementById('psBelum2').textContent = belum;
 
     renderProduk(allProduk);
   } catch(e) {
@@ -992,42 +998,44 @@ async function loadProduk() {
 }
 
 function renderProduk(products) {
-  const grid = document.getElementById('produkGrid');
+  const tbody = document.getElementById('produkTbody');
+  const tableWrap = document.getElementById('produkTableWrap');
   const empty = document.getElementById('produkEmpty');
-  grid.innerHTML = '';
+  tbody.innerHTML = '';
 
   if (!products.length) {
+    tableWrap.style.display = 'none';
     empty.style.display = 'block';
     return;
   }
   empty.style.display = 'none';
+  tableWrap.style.display = 'block';
 
-  const linkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>';
+  const linkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>';
 
-  products.forEach(p => {
-    const statusClass = (p.status || '').toLowerCase().includes('sudah') || (p.status || '').includes('✅') ? 'sudah' : 'belum';
-    const statusText = statusClass === 'sudah' ? '✅ Sudah' : '⏳ Belum';
+  products.forEach((p, i) => {
+    const isSudah = (p.status || '').toLowerCase().includes('sudah') || (p.status || '').includes('✅');
+    const row = document.createElement('tr');
+    row.style.borderBottom = '1px solid var(--border)';
+    row.style.background = i % 2 === 0 ? 'var(--surface-card)' : 'var(--bg)';
 
-    const card = document.createElement('div');
-    card.className = 'produk-card';
-    card.innerHTML = `
-      <div class="produk-card-header">
-        <span class="produk-card-no">#${p.no}</span>
-        <span class="produk-card-status ${statusClass}">${statusText}</span>
-      </div>
-      <div class="produk-card-name">${p.produk || '-'}</div>
-      <div class="produk-card-meta">
-        ${p.merk ? `<span>🏪 ${p.merk}</span>` : ''}
-        ${p.warna ? `<span>🎨 ${p.warna}</span>` : ''}
-        ${p.kategori ? `<span>📁 ${p.kategori}</span>` : ''}
-        ${p.tanggal ? `<span>📅 ${p.tanggal}</span>` : ''}
-      </div>
-      <div class="produk-card-links">
-        ${p.link_tokopedia ? `<a href="${p.link_tokopedia}" target="_blank" class="produk-card-link">${linkIcon} Tokopedia</a>` : ''}
-        ${p.link_drive ? `<a href="${p.link_drive}" target="_blank" class="produk-card-link">${linkIcon} Drive</a>` : ''}
-      </div>
+    const links = [];
+    if (p.link_tokopedia) links.push(`<a href="${p.link_tokopedia}" target="_blank" style="color:var(--primary);text-decoration:none;display:inline-flex;align-items:center;gap:3px;font-weight:500">${linkSvg} Tokopedia</a>`);
+    if (p.link_drive) links.push(`<a href="${p.link_drive}" target="_blank" style="color:var(--primary);text-decoration:none;display:inline-flex;align-items:center;gap:3px;font-weight:500">${linkSvg} Drive</a>`);
+
+    row.innerHTML = `
+      <td style="padding:10px 12px;color:var(--outline);font-weight:500;white-space:nowrap">${p.no}</td>
+      <td style="padding:10px 12px;font-weight:600;color:var(--on-surface);min-width:160px">${p.produk || '-'}</td>
+      <td style="padding:10px 12px;color:var(--on-surface)">${p.merk || '-'}</td>
+      <td style="padding:10px 12px;color:var(--on-surface)">${p.warna || '-'}</td>
+      <td style="padding:10px 12px;color:var(--on-surface)">${p.kategori || '-'}</td>
+      <td style="padding:10px 12px;text-align:center">
+        <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;display:inline-block;${isSudah ? 'background:#e8f5e9;color:#2e7d32' : 'background:#fff3e0;color:#e65100'}">${isSudah ? '✅ Sudah' : '⏳ Belum'}</span>
+      </td>
+      <td style="padding:10px 12px;text-align:center;white-space:nowrap">${links.join(' &nbsp; ') || '-'}</td>
+      <td style="padding:10px 12px;color:var(--outline);white-space:nowrap">${p.tanggal || '-'}</td>
     `;
-    grid.appendChild(card);
+    tbody.appendChild(row);
   });
 }
 
