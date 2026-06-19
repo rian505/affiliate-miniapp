@@ -168,30 +168,38 @@ def health():
 
 @app.get("/api/products")
 def get_products():
-    """Fetch all products from Google Sheets for showcase."""
-    if not SHEETS_ENABLED:
-        return JSONResponse({"ok": True, "count": 0, "products": []})
+    """Fetch all products from Google Sheets (public CSV export, no API key needed)."""
+    import csv
+    import io
+    import httpx
+    SHEET_CSV = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_TAB}"
     try:
-        svc = get_sheets_service()
-        if not svc:
-            return JSONResponse({"ok": True, "count": 0, "products": []})
-        r = svc.spreadsheets().values().get(
-            spreadsheetId=SHEET_ID, range=f"{SHEET_TAB}!A:H"
-        ).execute()
-        vals = r.get("values", [])
-        data = vals[1:] if len(vals) > 1 else []
+        with httpx.Client(timeout=15, follow_redirects=True) as client:
+            r = client.get(SHEET_CSV)
+            r.raise_for_status()
+        reader = csv.DictReader(io.StringIO(r.text))
         products = []
-        for i, row in enumerate(data):
+        count = 0
+        for row in reader:
+            # Skip empty rows
+            if not row.get("Nama Produk", "").strip():
+                continue
+            count += 1
+            # "KLIK DISINI" is not a real URL, skip it
+            drive_raw = row.get("Link Drive", "").strip()
+            drive_url = "" if drive_raw.upper() in ("KLIK DISINI", "FALSE", "") else drive_raw
+            tokopedia_raw = row.get("Link Tokopedia", "").strip()
+            tokopedia_url = "" if tokopedia_raw.upper() in ("FALSE", "") else tokopedia_raw
             products.append({
-                "no": i + 1,
-                "tanggal": row[0] if len(row) > 0 else "",
-                "produk": row[1] if len(row) > 1 else "",
-                "merk": row[2] if len(row) > 2 else "",
-                "warna": row[3] if len(row) > 3 else "",
-                "kategori": row[4] if len(row) > 4 else "",
-                "status": row[5] if len(row) > 5 else "",
-                "link_drive": row[6] if len(row) > 6 else "",
-                "link_tokopedia": row[7] if len(row) > 7 else "",
+                "no": count,
+                "tanggal": row.get("Tanggal", "").strip(),
+                "produk": row.get("Nama Produk", "").strip(),
+                "merk": row.get("Merk / Toko", "").strip(),
+                "warna": row.get("Warna", "").strip(),
+                "kategori": row.get("Kategori", "").strip(),
+                "status": row.get("Status", "").strip(),
+                "link_drive": drive_url,
+                "link_tokopedia": tokopedia_url,
             })
         return JSONResponse({"ok": True, "count": len(products), "products": products})
     except Exception as e:
