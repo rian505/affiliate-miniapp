@@ -203,9 +203,8 @@ def get_products():
                     tanggal = f"{d:02d}/{m:02d}/{y}"
                 except Exception:
                     pass
-            # Edit checkbox: True/False boolean
-            edit_val = cell(7)
-            is_edited = edit_val is True or str(edit_val).upper() == "TRUE"
+            # Edit checkbox: column no longer exists, default False (frontend uses localStorage)
+            is_edited = False
             products.append({
                 "no": count,
                 "tanggal": tanggal,
@@ -216,7 +215,7 @@ def get_products():
                 "status": str(cell(5)).strip(),
                 "link_drive": str(cell(6)).strip() if str(cell(6)).startswith("http") else "",
                 "edited": is_edited,
-                "link_tokopedia": str(cell(8)).strip() if str(cell(8)).startswith("http") else "",
+                "link_tokopedia": str(cell(7)).strip() if str(cell(7)).startswith("http") else "",
             })
         return JSONResponse({"ok": True, "count": len(products), "products": products})
     except Exception as e:
