@@ -4,12 +4,47 @@
     {
       "src": "app.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "favicon.ico",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "favicon-16x16.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "favicon-32x32.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "android-chrome-192x192.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "site.webmanifest",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "app.py"
-    }
+    { "src": "/favicon.ico", "dest": "/favicon.ico" },
+    { "src": "/favicon-(.+).png", "dest": "/favicon-$1.png" },
+    { "src": "/apple-touch-icon.png", "dest": "/apple-touch-icon.png" },
+    { "src": "/android-chrome-(.+).png", "dest": "/android-chrome-$1.png" },
+    { "src": "/site.webmanifest", "dest": "/site.webmanifest" },
+    { "src": "/(api|generate-prompt|sheets|sheets-read|products)(.*)", "dest": "app.py" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
