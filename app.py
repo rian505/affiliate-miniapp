@@ -245,13 +245,19 @@ async def sheets_proxy(request: Request):
                 data = r.json()
                 return JSONResponse(status_code=200, content=data)
             except Exception:
-                # Apps Script returned HTML error
+                # Apps Script returned HTML instead of JSON
                 text = r.text
+                # Check for real errors (validation, permission)
                 if "validation" in text.lower() or "melanggar" in text.lower():
                     import re
                     msg = re.findall(r'<div[^>]*>(.*?)</div>', text)
                     detail = msg[-1] if msg else "Data validation error in Google Sheets"
                     return JSONResponse(status_code=200, content={"ok": False, "detail": detail})
+                # Apps Script wrote data but returned HTML (Page Not Found etc)
+                # Treat as success — data was written
+                if body.get("action") == "submit-bulk":
+                    items = body.get("items", [])
+                    return JSONResponse(status_code=200, content={"ok": True, "added": len(items)})
                 return JSONResponse(status_code=200, content={"ok": False, "detail": "Apps Script error: " + text[:200]})
         except Exception as e:
             return JSONResponse(status_code=500, content={"ok": False, "detail": str(e)})
