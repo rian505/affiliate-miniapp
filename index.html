@@ -1118,19 +1118,40 @@ function parseLinks() {
     const isURL = /^https?:\/\//i.test(line);
 
     if (isURL) {
-      // Simpan produk sebelumnya
       if (current) results.push(current);
 
-      // Pisah URL dari inline text (jika ada setelah spasi atau slash terakhir)
-      // Contoh: "https://...xxx/ sendal wedges, hitam"
-      const spaceIdx = line.search(/\s/);
+      // Split AFTER the last "/" in the URL to get inline text
+      // e.g. "https://vt.tokopedia.com/t/xxx/ sendal wedges, hitam"
+      const lastSlash = line.lastIndexOf('/');
       let url, inlineText = '';
 
-      if (spaceIdx > -1) {
-        url = line.substring(0, spaceIdx).replace(/\/$/, '');
-        inlineText = line.substring(spaceIdx).trim();
+      if (lastSlash > -1 && lastSlash > 8) {
+        const afterSlash = line.substring(lastSlash + 1).trim();
+        if (afterSlash.includes(' ') || afterSlash.includes(',')) {
+          // There's inline text after URL: " sendal wedges, hitam"
+          url = line.substring(0, lastSlash + 1).trim().replace(/\/$/, '');
+          inlineText = afterSlash;
+        } else if (afterSlash) {
+          // URL has path after last slash, no inline text
+          url = line.replace(/\/$/, '');
+        } else {
+          // URL ends with "/", check for inline text after space
+          const rest = line.substring(lastSlash + 1);
+          if (rest.trim()) {
+            url = line.substring(0, lastSlash + 1).trim().replace(/\/$/, '');
+            inlineText = rest.trim();
+          } else {
+            url = line.replace(/\/$/, '');
+          }
+        }
       } else {
-        url = line.replace(/\/$/, '');
+        const spaceIdx = line.search(/\s/);
+        if (spaceIdx > -1) {
+          url = line.substring(0, spaceIdx);
+          inlineText = line.substring(spaceIdx).trim();
+        } else {
+          url = line;
+        }
       }
 
       if (inlineText) {
@@ -1141,13 +1162,11 @@ function parseLinks() {
       }
 
     } else if (current) {
-      // Baris non-URL setelah URL = nama produk / warna
       if (!current.nama && !current.warna) {
         const parts = line.split(',').map(s => s.trim());
         current.nama  = parts[0] || '';
         current.warna = parts[1] || '';
       } else if (current.nama && !current.warna) {
-        // Baris ini mungkin hanya warna
         current.warna = line;
       }
     }
