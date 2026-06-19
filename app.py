@@ -168,38 +168,55 @@ def health():
 
 @app.get("/api/products")
 def get_products():
-    """Fetch all products from Google Sheets (public CSV export, no API key needed)."""
-    import csv
-    import io
+    """Fetch all products from Google Sheets (gviz JSON — supports hyperlinks + checkbox)."""
+    import re
     import httpx
-    SHEET_CSV = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_TAB}"
+    SHEET_GVIZ = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?sheet={SHEET_TAB}"
     try:
         with httpx.Client(timeout=15, follow_redirects=True) as client:
-            r = client.get(SHEET_CSV)
+            r = client.get(SHEET_GVIZ)
             r.raise_for_status()
-        reader = csv.DictReader(io.StringIO(r.text))
+        # gviz wraps JSON in google.visualization.Query.setResponse(...);
+        m = re.search(r'setResponse\((.*)\);?\s*$', r.text, re.DOTALL)
+        if not m:
+            return JSONResponse({"ok": False, "detail": "Failed to parse gviz response"})
+        data = json.loads(m.group(1))
+        rows = data.get("table", {}).get("rows", [])
         products = []
         count = 0
-        for row in reader:
-            # Skip empty rows
-            if not row.get("Nama Produk", "").strip():
+        for row in rows:
+            cells = row.get("c", [])
+            def cell(i):
+                c = cells[i] if i < len(cells) and cells[i] else None
+                return (c.get("v") or "") if c else ""
+            nama = str(cell(1)).strip()
+            if not nama:
                 continue
             count += 1
-            # "KLIK DISINI" is not a real URL, skip it
-            drive_raw = row.get("Link Drive", "").strip()
-            drive_url = "" if drive_raw.upper() in ("KLIK DISINI", "FALSE", "") else drive_raw
-            tokopedia_raw = row.get("Link Tokopedia", "").strip()
-            tokopedia_url = "" if tokopedia_raw.upper() in ("FALSE", "") else tokopedia_raw
+            # Parse gviz date format: Date(2026,3,6) → 04/06/2026 (month is 0-indexed)
+            raw_date = str(cell(0)).strip()
+            tanggal = raw_date
+            if raw_date.startswith("Date("):
+                try:
+                    parts = raw_date[5:-1].split(",")
+                    y, m, d = int(parts[0]), int(parts[1]) + 1, int(parts[2])
+                    tanggal = f"{d:02d}/{m:02d}/{y}"
+                except Exception:
+                    pass
+            # Edit checkbox: True/False boolean
+            edit_val = cell(7)
+            is_edited = edit_val is True or str(edit_val).upper() == "TRUE"
             products.append({
                 "no": count,
-                "tanggal": row.get("Tanggal", "").strip(),
-                "produk": row.get("Nama Produk", "").strip(),
-                "merk": row.get("Merk / Toko", "").strip(),
-                "warna": row.get("Warna", "").strip(),
-                "kategori": row.get("Kategori", "").strip(),
-                "status": row.get("Status", "").strip(),
-                "link_drive": drive_url,
-                "link_tokopedia": tokopedia_url,
+                "tanggal": tanggal,
+                "produk": nama,
+                "merk": str(cell(2)).strip(),
+                "warna": str(cell(3)).strip(),
+                "kategori": str(cell(4)).strip(),
+                "status": str(cell(5)).strip(),
+                "link_drive": str(cell(6)).strip() if str(cell(6)).startswith("http") else "",
+                "edited": is_edited,
+                "link_tokopedia": str(cell(8)).strip() if str(cell(8)).startswith("http") else "",
             })
         return JSONResponse({"ok": True, "count": len(products), "products": products})
     except Exception as e:

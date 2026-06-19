@@ -750,6 +750,7 @@
           <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Warna</th>
           <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Kategori</th>
           <th style="padding:10px 12px;text-align:center;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Status</th>
+          <th style="padding:10px 12px;text-align:center;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">✅ Edit</th>
           <th style="padding:10px 12px;text-align:center;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Link</th>
           <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--on-surface);white-space:nowrap;border-bottom:2px solid var(--border)">Tanggal</th>
         </tr>
@@ -1012,25 +1013,30 @@ function renderProduk(products) {
   tableWrap.style.display = 'block';
 
   const linkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>';
+  const driveSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>';
 
   products.forEach((p, i) => {
     const isSudah = (p.status || '').toLowerCase().includes('sudah') || (p.status || '').includes('✅');
+    const isEdited = p.edited === true;
     const row = document.createElement('tr');
     row.style.borderBottom = '1px solid var(--border)';
     row.style.background = i % 2 === 0 ? 'var(--surface-card)' : 'var(--bg)';
 
     const links = [];
-    if (p.link_tokopedia) links.push(`<a href="${p.link_tokopedia}" target="_blank" style="color:var(--primary);text-decoration:none;display:inline-flex;align-items:center;gap:3px;font-weight:500">${linkSvg} Tokopedia</a>`);
-    if (p.link_drive) links.push(`<a href="${p.link_drive}" target="_blank" style="color:var(--primary);text-decoration:none;display:inline-flex;align-items:center;gap:3px;font-weight:500">${linkSvg} Drive</a>`);
+    if (p.link_drive) links.push(`<a href="${p.link_drive}" target="_blank" style="color:#4285f4;text-decoration:none;display:inline-flex;align-items:center;gap:3px;font-weight:500">${driveSvg} Drive</a>`);
+    if (p.link_tokopedia) links.push(`<a href="${p.link_tokopedia}" target="_blank" style="color:#42b549;text-decoration:none;display:inline-flex;align-items:center;gap:3px;font-weight:500">${linkSvg} Tokopedia</a>`);
 
     row.innerHTML = `
       <td style="padding:10px 12px;color:var(--outline);font-weight:500;white-space:nowrap">${p.no}</td>
-      <td style="padding:10px 12px;font-weight:600;color:var(--on-surface);min-width:160px">${p.produk || '-'}</td>
+      <td style="padding:10px 12px;font-weight:600;color:var(--on-surface);min-width:140px">${p.produk || '-'}</td>
       <td style="padding:10px 12px;color:var(--on-surface)">${p.merk || '-'}</td>
       <td style="padding:10px 12px;color:var(--on-surface)">${p.warna || '-'}</td>
       <td style="padding:10px 12px;color:var(--on-surface)">${p.kategori || '-'}</td>
       <td style="padding:10px 12px;text-align:center">
         <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;display:inline-block;${isSudah ? 'background:#e8f5e9;color:#2e7d32' : 'background:#fff3e0;color:#e65100'}">${isSudah ? '✅ Sudah' : '⏳ Belum'}</span>
+      </td>
+      <td style="padding:10px 12px;text-align:center">
+        <span style="font-size:16px;${isEdited ? 'color:#2e7d32' : 'color:#ccc'}">${isEdited ? '☑' : '☐'}</span>
       </td>
       <td style="padding:10px 12px;text-align:center;white-space:nowrap">${links.join(' &nbsp; ') || '-'}</td>
       <td style="padding:10px 12px;color:var(--outline);white-space:nowrap">${p.tanggal || '-'}</td>
