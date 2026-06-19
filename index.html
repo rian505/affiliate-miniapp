@@ -2,659 +2,721 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MINJI Tools</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root {
-  --bg: #fafafa;
-  --surface-card: #ffffff;
-  --surface-low: #f5f5f5;
-  --primary-c: #00a3c4;
-  --primary-xlight: #e6f7fa;
-  --secondary: #1a1a2e;
-  --on-surface: #1a1a2e;
-  --on-surface-v: #444;
-  --outline: #8e8e93;
-  --outline-v: #e0e0e0;
-  --border: #e8e8ec;
-  --success: #34c759;
-  --success-bg: #e8f9ed;
-  --error: #ff3b30;
-  --error-bg: #ffeceb;
-  --warning: #ff9500;
-  --warning-bg: #fff4e5;
-  --shadow-card: 0 1px 3px rgba(0,0,0,.05);
-  --shadow-hover: 0 4px 12px rgba(0,0,0,.08);
-  --r: 10px; --r-md: 12px; --r-lg: 16px;
-}
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--on-surface);
-  padding-bottom: 80px;
-  -webkit-font-smoothing: antialiased;
-}
+  :root {
+    --primary: #00677d;
+    --primary-c: #00a3c4;
+    --primary-light: #b3ebff;
+    --primary-xlight: #e0f7fa;
+    --secondary: #00323d;
+    --surface: #f9f9fc;
+    --surface-low: #f3f3f6;
+    --surface-card: #ffffff;
+    --on-surface: #1a1c1e;
+    --on-surface-v: #3d494d;
+    --outline: #6d797e;
+    --outline-v: #bcc8cd;
+    --error: #ba1a1a;
+    --error-c: #ffdad6;
+    --success: #1a7a3c;
+    --success-c: #d4f0df;
+    --r-sm: 4px;
+    --r: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+    --shadow-card: 0 2px 16px rgba(0,163,196,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-hover: 0 8px 32px rgba(0,163,196,0.14), 0 2px 8px rgba(0,0,0,0.06);
+  }
 
-/* ── NAV ── */
-.nav-bar {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 16px;
-}
-.nav-inner {
-  max-width: 720px; margin: 0 auto;
-  display: flex; align-items: center; gap: 0;
-  height: 48px;
-}
-.nav-logo {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px; font-weight: 800;
-  color: var(--primary-c);
-  margin-right: 20px;
-  flex-shrink: 0;
-}
-.nav-tab {
-  font-size: 13px; font-weight: 500; color: var(--outline);
-  padding: 14px 14px;
-  cursor: pointer; border: none; background: none;
-  border-bottom: 2px solid transparent;
-  transition: all .15s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.nav-tab:hover { color: var(--on-surface); }
-.nav-tab.active { color: var(--primary-c); border-bottom-color: var(--primary-c); font-weight: 600; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── MOBILE NAV ── */
-.mobile-nav {
-  display: none;
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(255,255,255,.95);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  padding: 0 8px;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.mobile-nav-inner {
-  display: flex; justify-content: space-around; align-items: center;
-  height: 56px;
-  max-width: 720px; margin: 0 auto;
-}
-.mobile-tab {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  font-size: 10px; font-weight: 500;
-  color: var(--outline);
-  padding: 6px 12px;
-  border: none; background: none;
-  cursor: pointer;
-  border-radius: var(--r);
-  transition: all .15s;
-  flex: 1;
-}
-.mobile-tab svg { width: 22px; height: 22px; }
-.mobile-tab.active { color: var(--primary-c); }
-.mobile-tab.active svg { transform: scale(1.1); }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--surface);
+    color: var(--on-surface);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
 
-@media (max-width: 640px) {
-  .nav-bar { padding: 0 12px; }
-  .nav-tab { display: none; }
-  .mobile-nav { display: block; }
-  body { padding-bottom: 72px; }
-}
+  /* ── TOP NAV ── */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(249,249,252,0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--outline-v);
+    padding: 0 24px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    object-fit: cover; border: 2px solid var(--primary-c);
+  }
+  .nav-logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 18px;
+    color: var(--secondary); letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--primary-c); }
+  .nav-tabs {
+    display: flex; gap: 4px;
+    background: var(--surface-low);
+    border-radius: var(--r-xl);
+    padding: 4px;
+  }
+  .nav-tab {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: none; cursor: pointer;
+    background: transparent;
+    color: var(--outline);
+    transition: all .2s ease;
+  }
+  .nav-tab.active {
+    background: var(--surface-card);
+    color: var(--secondary);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  }
+  .nav-tab:hover:not(.active) { color: var(--on-surface); }
 
-/* ── LAYOUT ── */
-.container { max-width: 720px; margin: 0 auto; padding: 20px 16px; }
-.page { display: none; }
-.page.active { display: block; }
-.page-header { margin-bottom: 20px; }
-.page-eyebrow {
-  font-size: 11px; font-weight: 600; color: var(--primary-c);
-  letter-spacing: 0.06em; text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.page-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 24px; font-weight: 700;
-  color: var(--secondary);
-  line-height: 1.2;
-}
-.page-desc {
-  font-size: 14px; color: var(--outline);
-  margin-top: 6px; line-height: 1.5;
-}
+  /* ── LAYOUT ── */
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
 
-/* ── CARD ── */
-.card {
-  background: var(--surface-card);
-  border: 1px solid var(--outline-v);
-  border-radius: var(--r-lg);
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow-card);
-  transition: box-shadow .2s;
-}
-.card:hover { box-shadow: var(--shadow-hover); }
-.card-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px; font-weight: 600;
-  color: var(--secondary);
-  letter-spacing: 0.01em;
-  margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
-}
-.card-title .icon {
-  width: 28px; height: 28px;
-  background: var(--primary-xlight);
-  border-radius: var(--r);
-  display: flex; align-items: center; justify-content: center;
-}
-.card-title .icon svg { width: 15px; height: 15px; color: var(--primary-c); }
+  .container {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
 
-/* ── ALERT ── */
-.alert {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 12px 14px;
-  border-radius: var(--r-md);
-  font-size: 13px; line-height: 1.5;
-  margin-bottom: 14px;
-}
-.alert svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
-.alert-info { background: var(--primary-xlight); color: #0a6e85; }
-.alert-success { background: var(--success-bg); color: #1b7a35; }
-.alert-warning { background: var(--warning-bg); color: #8a5200; }
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 28px;
+  }
+  .page-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary-c);
+    margin-bottom: 6px;
+  }
+  .page-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--secondary);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .page-desc {
+    font-size: 14px; color: var(--on-surface-v);
+    margin-top: 6px; line-height: 1.5;
+  }
 
-/* ── INPUTS ── */
-.form-input {
-  width: 100%;
-  border: 1px solid var(--outline-v);
-  border-radius: var(--r);
-  padding: 12px 14px;
-  font-size: 14px;
-  font-family: 'Inter', sans-serif;
-  background: var(--surface-card);
-  color: var(--on-surface);
-  transition: border-color .15s;
-  outline: none;
-}
-.form-input:focus { border-color: var(--primary-c); }
-.form-input::placeholder { color: #c0c0c0; }
-textarea.form-input { resize: vertical; min-height: 100px; }
+  /* ── CARD ── */
+  .card {
+    background: var(--surface-card);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow .2s;
+  }
+  .card:hover { box-shadow: var(--shadow-hover); }
+  .card-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px; font-weight: 600;
+    color: var(--secondary);
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .icon {
+    width: 28px; height: 28px;
+    background: var(--primary-xlight);
+    border-radius: var(--r);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .card-title .icon svg { width: 15px; height: 15px; color: var(--primary); }
 
-.form-label {
-  display: block;
-  font-size: 12px; font-weight: 600;
-  color: var(--on-surface-v);
-  margin-bottom: 6px;
-}
+  /* ── FORM ELEMENTS ── */
+  label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--on-surface-v);
+    margin-bottom: 6px;
+  }
+  input[type="text"], textarea, select {
+    width: 100%;
+    background: var(--surface-low);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-md);
+    padding: 10px 13px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--on-surface);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    resize: vertical;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--primary-c);
+    box-shadow: 0 0 0 3px rgba(0,163,196,0.12);
+    background: var(--surface-card);
+  }
+  textarea { min-height: 120px; }
+  .form-group { margin-bottom: 14px; }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
-}
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 10px 20px;
+    border-radius: var(--r-md);
+    border: none; cursor: pointer;
+    transition: all .18s ease;
+    text-decoration: none;
+  }
+  .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--secondary); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,103,125,0.25); }
+  .btn-primary:active { transform: none; }
+  .btn-outline {
+    background: transparent;
+    color: var(--primary);
+    border: 1.5px solid var(--primary-c);
+  }
+  .btn-outline:hover { background: var(--primary-xlight); }
+  .btn-ghost {
+    background: var(--surface-low);
+    color: var(--on-surface-v);
+    border: 1px solid var(--outline-v);
+  }
+  .btn-ghost:hover { background: var(--outline-v); color: var(--on-surface); }
+  .btn-sm { padding: 7px 14px; font-size: 12px; }
+  .btn-full { width: 100%; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
-/* ── BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px; font-weight: 600;
-  padding: 12px 20px;
-  border-radius: var(--r);
-  border: none;
-  cursor: pointer;
-  transition: all .15s;
-  white-space: nowrap;
-}
-.btn svg { width: 16px; height: 16px; }
-.btn-primary {
-  background: var(--primary-c);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0,163,196,.3);
-}
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,163,196,.4); }
-.btn-primary:active { transform: translateY(0); }
-.btn-full { width: 100%; }
-.btn-sm { padding: 8px 14px; font-size: 12px; }
-.btn-outline {
-  background: transparent;
-  border: 1.5px solid var(--outline-v);
-  color: var(--on-surface);
-}
-.btn-outline:hover { border-color: var(--primary-c); color: var(--primary-c); }
-.btn-outline.active {
-  border-color: var(--primary-c);
-  background: var(--primary-xlight);
-  color: var(--primary-c);
-}
+  /* ── CHIPS ── */
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--primary-xlight);
+    color: var(--secondary);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .chip-green { background: var(--success-c); color: var(--success); }
+  .chip-red { background: var(--error-c); color: var(--error); }
 
-/* ── FILTER PILLS ── */
-.filter-pills {
-  display: flex; gap: 6px; flex-wrap: wrap;
-}
+  /* ── ALERTS ── */
+  .alert {
+    padding: 12px 14px;
+    border-radius: var(--r-md);
+    font-size: 13px; line-height: 1.5;
+    display: flex; gap: 10px; align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .alert svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert-info { background: var(--primary-xlight); color: var(--secondary); }
+  .alert-success { background: var(--success-c); color: var(--success); }
+  .alert-error { background: var(--error-c); color: var(--error); }
 
-/* ── UPLOAD ZONE ── */
-.upload-zone {
-  border: 2px dashed var(--outline-v);
-  border-radius: var(--r-lg);
-  padding: 28px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all .2s;
-  position: relative;
-  background: var(--surface-low);
-}
-.upload-zone:hover, .upload-zone.drag-over {
-  border-color: var(--primary-c);
-  background: var(--primary-xlight);
-}
-.upload-zone input[type="file"] {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  opacity: 0; cursor: pointer;
-  border: none; background: none; padding: 0;
-}
-.upload-zone input[type="file"]:focus { box-shadow: none; }
-.upload-icon {
-  width: 44px; height: 44px;
-  background: var(--surface-card);
-  border-radius: var(--r-md);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 12px;
-  box-shadow: var(--shadow-card);
-}
-.upload-icon svg { width: 22px; height: 22px; color: var(--primary-c); }
-.upload-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px; font-weight: 600;
-  color: var(--on-surface);
-  margin-bottom: 4px;
-}
-.upload-hint { font-size: 12px; color: var(--outline); }
-.upload-mode-badge {
-  display: inline-block;
-  font-size: 11px; font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 99px;
-  margin-top: 10px;
-  background: var(--surface-card);
-  color: var(--outline);
-  border: 1px solid var(--outline-v);
-}
+  /* ── DIVIDER ── */
+  .divider {
+    border: none; border-top: 1px solid var(--outline-v);
+    margin: 20px 0;
+  }
 
-/* ── PHOTO PREVIEWS ── */
-.photo-previews {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  margin-top: 12px;
-}
-.photo-preview {
-  position: relative;
-  width: 80px; height: 80px;
-  border-radius: var(--r);
-  overflow: hidden;
-  border: 2px solid var(--outline-v);
-}
-.photo-preview img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
-.photo-preview .remove-btn {
-  position: absolute; top: 3px; right: 3px;
-  width: 20px; height: 20px;
-  border-radius: 99px;
-  background: rgba(0,0,0,.6);
-  color: #fff;
-  border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px;
-  line-height: 1;
-}
-.photo-count-badge {
-  font-size: 11px; font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 99px;
-  margin-top: 10px;
-  background: var(--primary-xlight);
-  color: var(--primary-c);
-  display: inline-flex; align-items: center; gap: 4px;
-}
+  /* ────────────────────────────────
+     FITUR 1 — BULK SHEETS
+  ──────────────────────────────── */
+  .parsed-preview {
+    margin-top: 14px;
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .parsed-preview-header {
+    background: var(--surface-low);
+    padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--outline-v);
+  }
+  .parsed-preview-header span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--on-surface-v);
+  }
+  .parsed-items { max-height: 280px; overflow-y: auto; }
+  .parsed-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--surface-low);
+    transition: background .12s;
+  }
+  .parsed-item:last-child { border-bottom: none; }
+  .parsed-item:hover { background: var(--surface-low); }
+  .parsed-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--primary-c);
+    min-width: 22px;
+    margin-top: 2px;
+  }
+  .parsed-info { flex: 1; min-width: 0; }
+  .parsed-name {
+    font-size: 13px; font-weight: 500;
+    color: var(--on-surface);
+    margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .parsed-link {
+    font-size: 11px; color: var(--outline);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-family: 'Inter', monospace;
+  }
+  .parsed-chips { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
+  .parsed-remove {
+    background: none; border: none; cursor: pointer;
+    color: var(--outline); padding: 2px;
+    border-radius: var(--r-sm);
+    transition: color .12s;
+    margin-top: 2px;
+  }
+  .parsed-remove:hover { color: var(--error); }
+  .parsed-remove svg { width: 14px; height: 14px; }
 
-/* ── DIVIDER ── */
-.divider {
-  border: none;
-  border-top: 1px solid var(--outline-v);
-  margin: 16px 0;
-}
+  .manual-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
 
-/* ── OUTPUT PANEL ── */
-.output-panel {
-  background: var(--surface-card);
-  border: 1px solid var(--outline-v);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  margin-top: 16px;
-}
-.output-header {
-  background: var(--surface-low);
-  padding: 12px 16px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--outline-v);
-}
-.output-header-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px; font-weight: 600;
-  color: var(--on-surface);
-  display: flex; align-items: center; gap: 6px;
-}
-.output-body {
-  padding: 16px;
-}
-.output-text {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--on-surface);
-  white-space: pre-wrap;
-  word-break: break-word;
-  background: var(--surface-low);
-  padding: 14px;
-  border-radius: var(--r);
-  border: 1px solid var(--outline-v);
-  max-height: 400px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.output-actions {
-  display: flex; gap: 8px; margin-top: 12px;
-}
+  .submit-actions {
+    display: flex; gap: 10px; align-items: center;
+    margin-top: 16px;
+  }
 
-/* ── CHIPS ── */
-.chip {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 11px; font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 99px;
-  background: var(--surface-low);
-  color: var(--on-surface-v);
-  border: 1px solid var(--outline-v);
-}
-.chip-active {
-  background: var(--primary-xlight);
-  color: var(--primary-c);
-  border-color: var(--primary-c);
-}
+  /* ────────────────────────────────
+     FITUR 2 — PROMPT GENERATOR
+  ──────────────────────────────── */
+  .upload-zone {
+    border: 2px dashed var(--outline-v);
+    border-radius: var(--r-lg);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+    background: var(--surface-low);
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--primary-c);
+    background: var(--primary-xlight);
+  }
+  .upload-zone input[type="file"] {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0; cursor: pointer;
+    border: none; background: none; padding: 0;
+  }
+  .upload-zone input[type="file"]:focus { box-shadow: none; }
+  .upload-icon {
+    width: 44px; height: 44px;
+    background: var(--surface-card);
+    border-radius: var(--r-md);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    box-shadow: var(--shadow-card);
+  }
+  .upload-icon svg { width: 22px; height: 22px; color: var(--primary-c); }
+  .upload-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px; font-weight: 600;
+    color: var(--secondary); margin-bottom: 4px;
+  }
+  .upload-hint { font-size: 12px; color: var(--outline); }
+  .upload-mode-badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 12px;
+    background: var(--primary-xlight);
+    color: var(--primary);
+    border-radius: 999px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.04em;
+  }
 
-/* ── LOADING ── */
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-spinner {
-  width: 24px; height: 24px;
-  border: 2.5px solid var(--outline-v);
-  border-top-color: var(--primary-c);
-  border-radius: 99px;
-  animation: spin .6s linear infinite;
-}
+  .photo-previews {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .photo-thumb {
+    position: relative;
+    width: 80px; height: 80px;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    border: 2px solid var(--outline-v);
+    flex-shrink: 0;
+  }
+  .photo-thumb img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .photo-thumb .thumb-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,50,61,0.75);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; font-weight: 700;
+    text-align: center; padding: 3px 0;
+    letter-spacing: 0.04em;
+  }
+  .photo-thumb .thumb-remove {
+    position: absolute; top: 3px; right: 3px;
+    width: 18px; height: 18px;
+    background: rgba(186,26,26,0.85);
+    border: none; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .photo-thumb .thumb-remove svg { width: 10px; height: 10px; color: #fff; }
 
-/* ── STATS GRID ── */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.stat-card {
-  background: var(--surface-card);
-  border: 1px solid var(--outline-v);
-  border-radius: var(--r-md);
-  padding: 14px;
-  text-align: center;
-}
-.stat-num {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 22px; font-weight: 700;
-  color: var(--on-surface);
-  line-height: 1;
-}
-.stat-label {
-  font-size: 11px; color: var(--outline);
-  margin-top: 4px;
-}
+  .prompt-output-block {
+    margin-top: 0;
+  }
+  .prompt-box {
+    background: var(--surface-low);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-md);
+    padding: 14px;
+    font-size: 13px; line-height: 1.7;
+    color: var(--on-surface);
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 80px;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 10px;
+  }
+  .prompt-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .prompt-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+  .copy-btn {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--surface-card);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r);
+    padding: 5px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 600;
+    color: var(--on-surface-v);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .copy-btn:hover { background: var(--primary-xlight); color: var(--primary); border-color: var(--primary-c); }
+  .copy-btn svg { width: 13px; height: 13px; }
+  .copy-btn.copied { background: var(--success-c); color: var(--success); border-color: var(--success); }
 
-/* ── TOAST ── */
-.toast-container {
-  position: fixed; bottom: 80px; left: 50%;
-  transform: translateX(-50%);
-  z-index: 999;
-  display: flex; flex-direction: column; gap: 8px;
-  align-items: center;
-  pointer-events: none;
-}
-.toast {
-  padding: 10px 18px;
-  border-radius: 99px;
-  font-size: 13px; font-weight: 500;
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(0,0,0,.15);
-  pointer-events: auto;
-  animation: toast-in .25s ease;
-}
-@keyframes toast-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-.toast-default { background: var(--secondary); }
-.toast-success { background: #2e7d32; }
-.toast-error { background: #c62828; }
-.toast-info { background: #0277bd; }
+  .loading-spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2.5px solid var(--outline-v);
+    border-top-color: var(--primary-c);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── PARSED PREVIEW ── */
-.parsed-preview {
-  margin-top: 14px;
-  border: 1px solid var(--outline-v);
-  border-radius: var(--r-md);
-  overflow: hidden;
-}
-.parsed-preview-header {
-  background: var(--surface-low);
-  padding: 10px 14px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--outline-v);
-}
-.parsed-preview-header span {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px; font-weight: 600;
-  color: var(--on-surface-v);
-}
-.parsed-items { max-height: 280px; overflow-y: auto; }
-.parsed-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 11px 14px;
-  border-bottom: 1px solid var(--surface-low);
-  transition: background .12s;
-}
-.parsed-item:last-child { border-bottom: none; }
-.parsed-item:hover { background: var(--surface-low); }
-.parsed-num {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px; font-weight: 700;
-  color: var(--primary-c);
-  min-width: 22px;
-  margin-top: 2px;
-}
-.parsed-info { flex: 1; min-width: 0; }
-.parsed-name {
-  font-size: 13px; font-weight: 500;
-  color: var(--on-surface);
-  margin-bottom: 2px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.parsed-link {
-  font-size: 11px; color: var(--outline);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  font-family: 'Inter', monospace;
-}
-.parsed-chips { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
-.parsed-remove {
-  background: none; border: none; cursor: pointer;
-  color: var(--outline); padding: 2px;
-  border-radius: var(--r-sm);
-  transition: color .12s;
-  margin-top: 2px;
-}
-.parsed-remove:hover { color: var(--error); }
-.parsed-remove svg { width: 14px; height: 14px; }
+  /* ── PRODUCT CARDS ── */
+  .produk-card {
+    background: var(--surface-card);
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+    padding: 16px;
+    transition: all .18s ease;
+  }
+  .produk-card:hover { border-color: var(--primary-c); box-shadow: 0 2px 12px rgba(0,163,196,0.08); }
+  .produk-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .produk-card-no {
+    font-size: 11px; font-weight: 600; color: var(--outline);
+    background: var(--primary-xlight); padding: 2px 8px; border-radius: 99px;
+  }
+  .produk-card-status {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 99px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .produk-card-status.sudah { background: #e8f5e9; color: #2e7d32; }
+  .produk-card-status.belum { background: #fff3e0; color: #e65100; }
+  .produk-card-name {
+    font-size: 15px; font-weight: 600; color: var(--on-surface);
+    margin-bottom: 4px; font-family: 'Montserrat', sans-serif;
+  }
+  .produk-card-meta {
+    font-size: 12px; color: var(--outline); margin-bottom: 10px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .produk-card-meta span {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--bg); padding: 2px 8px; border-radius: 6px;
+  }
+  .produk-card-links {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .produk-card-link {
+    font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 8px;
+    background: var(--primary-xlight); color: var(--primary);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+    transition: all .15s ease;
+  }
+  .produk-card-link:hover { background: var(--primary-c); color: #fff; }
+  .produk-card-link svg { width: 12px; height: 12px; }
 
-.manual-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  margin-top: 14px;
-}
+  /* ── TOAST ── */
+  .toast-container {
+    position: fixed; bottom: 24px; right: 24px;
+    z-index: 9999;
+    display: flex; flex-direction: column; gap: 8px;
+    pointer-events: none;
+  }
+  .toast {
+    background: var(--secondary);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: var(--r-md);
+    font-size: 13px; font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    display: flex; align-items: center; gap: 8px;
+    pointer-events: all;
+    animation: toastIn .25s ease;
+    max-width: 300px;
+  }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--error); }
+  .toast svg { width: 16px; height: 16px; flex-shrink: 0; }
+  @keyframes toastIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
 
-.submit-actions {
-  display: flex; gap: 10px; align-items: center;
-  margin-top: 16px;
-}
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--outline);
+  }
+  .empty-state svg { width: 36px; height: 36px; margin-bottom: 10px; opacity: 0.5; }
+  .empty-state p { font-size: 13px; }
 
-/* ────────────────────────────────
-   FITUR 2 — PROMPT GENERATOR
-──────────────────────────────── */
-.prompt-output-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 16px;
-}
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .container { padding: 20px 16px; }
+    .form-row { grid-template-columns: 1fr; }
+    .manual-fields { grid-template-columns: 1fr 1fr; }
+    .nav-tabs { display: none; }
+    .mobile-tabs {
+      display: flex !important;
+    }
+  }
 
-@media (max-width: 640px) {
-  .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .stat-num { font-size: 18px; }
-  .stat-card { padding: 12px 8px; }
-  .form-row { grid-template-columns: 1fr; }
-  .manual-fields { grid-template-columns: 1fr; }
-  .prompt-output-grid { grid-template-columns: 1fr; }
-  .upload-zone { padding: 20px 14px; }
-  .output-text { font-size: 11px; }
-  .nav-logo { font-size: 14px; margin-right: 12px; }
-}
+  .mobile-tabs {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(249,249,252,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--outline-v);
+    padding: 8px 16px 16px;
+    gap: 8px;
+    z-index: 100;
+  }
+  .mobile-tab {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 8px;
+    border-radius: var(--r-md);
+    border: none; cursor: pointer; background: transparent;
+    color: var(--outline);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px; font-weight: 600;
+    transition: all .15s;
+  }
+  .mobile-tab svg { width: 20px; height: 20px; }
+  .mobile-tab.active { background: var(--primary-xlight); color: var(--primary); }
+
+  @media (max-width: 640px) {
+    body { padding-bottom: 80px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- ═══ TOP NAV ═══ -->
-<nav class="nav-bar">
-  <div class="nav-inner">
-    <div class="nav-logo">MINJI</div>
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="nav-brand">
+    <img class="nav-avatar" src="https://i.imgur.com/placeholder.png" alt="MINJI" id="avatarImg" onerror="this.style.display='none'">
+    <span class="nav-logo">MINJI <span>Tools</span></span>
+  </div>
+  <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchTab('sheets')">Spreadsheet</button>
     <button class="nav-tab" onclick="switchTab('produk')">Produk</button>
-    <button class="nav-tab" onclick="switchTab('prompt')">Prompt</button>
+    <button class="nav-tab" onclick="switchTab('prompt')">Prompt Gen</button>
   </div>
 </nav>
 
-<!-- ═══ BOTTOM NAV (mobile) ═══ -->
-<nav class="mobile-nav">
-  <div class="mobile-nav-inner">
-    <button class="mobile-tab active" id="mob-sheets" onclick="switchTab('sheets')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-      Spreadsheet
-    </button>
-    <button class="mobile-tab" id="mob-produk" onclick="switchTab('produk')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>
-      Produk
-    </button>
-    <button class="mobile-tab" id="mob-prompt" onclick="switchTab('prompt')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      Prompt
-    </button>
-  </div>
-</nav>
+<!-- MOBILE TABS -->
+<div class="mobile-tabs">
+  <button class="mobile-tab active" id="mob-sheets" onclick="switchTab('sheets')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+    Spreadsheet
+  </button>
+  <button class="mobile-tab" id="mob-produk" onclick="switchTab('produk')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+    Produk
+  </button>
+  <button class="mobile-tab" id="mob-prompt" onclick="switchTab('prompt')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+    Prompt Gen
+  </button>
+</div>
 
-<!-- PAGE: SPREADSHEET -->
+<!-- PAGE: SHEETS -->
 <div class="page active" id="page-sheets">
 <div class="container">
   <div class="page-header">
     <div class="page-eyebrow">Fitur 1</div>
-    <h1 class="page-title">Spreadsheet</h1>
-    <p class="page-desc">Input data produk — MINJI langsung kirim ke Google Sheets.</p>
+    <h1 class="page-title">Bulk ke Spreadsheet</h1>
+    <p class="page-desc">Paste link Tokopedia sekaligus — otomatis di-parse ke Google Sheets kamu.</p>
   </div>
 
-  <!-- 1. LINK TOKOPEDIA -->
+  <!-- STEP 1: Paste Links -->
   <div class="card">
     <div class="card-title">
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
       </div>
-      Link Tokopedia
+      Paste Link Tokopedia
     </div>
 
     <div class="alert alert-info">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <div>Paste 1 atau banyak link Tokopedia (pisah enter/spasi/koma).<br>MINJI otomatis ambil <strong>Nama + Merk + Warna + Kategori</strong>.</div>
+      <div>Format bebas — URL bisa digabung dengan nama produk atau dipisah baris baru. Satu URL per produk. Nama produk & warna diambil otomatis.</div>
     </div>
 
-    <textarea class="form-input" id="tokpedLinks" rows="3" placeholder="https://www.tokopedia.com/xxx/yyy&#10;https://www.tokopedia.com/aaa/bbb&#10;https://www.tokopedia.com/ccc/ddd"></textarea>
-
-    <!-- Parsed preview -->
-    <div class="parsed-preview" id="parsedPreview" style="display:none">
-      <div class="parsed-preview-header">
-        <span>📋 Produk Terdeteksi</span>
-        <button class="btn btn-sm btn-outline" onclick="clearParsed()" style="font-size:11px;padding:4px 10px">Hapus Semua</button>
-      </div>
-      <div class="parsed-items" id="parsedItems"></div>
+    <div class="form-group">
+      <label>Link & Produk</label>
+      <textarea id="bulkInput" placeholder="https://vt.tokopedia.com/t/ZS92WhQ7RTxhe-Ychzz/sendal wedges, hitam&#10;https://vt.tokopedia.com/t/ZS92WhD7sSPbv-1j3pf/sandal selop,cream&#10;&#10;Atau pisah baris:&#10;https://vt.tokopedia.com/t/xxx/&#10;nama produk, warna" rows="7"></textarea>
     </div>
+    <button class="btn btn-outline" onclick="parseLinks()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Parse Link
+    </button>
 
-    <div id="manualOverride" style="display:none">
-      <p style="font-size:12px;color:var(--outline);margin-bottom:10px">✏️ Koreksi manual (opsional) — kosongkan jika sudah benar:</p>
-      <div class="manual-fields">
-        <div>
-          <label class="form-label">Nama Produk</label>
-          <input type="text" class="form-input" id="manualNama" placeholder="Auto-detect">
+    <!-- Preview hasil parse -->
+    <div id="parsedPreview" style="display:none">
+      <div class="parsed-preview">
+        <div class="parsed-preview-header">
+          <span id="parsedCount">0 produk ditemukan</span>
+          <button class="btn btn-ghost btn-sm" onclick="clearParsed()">Hapus semua</button>
         </div>
-        <div>
-          <label class="form-label">Merk / Toko</label>
-          <input type="text" class="form-input" id="manualMerk" placeholder="cth: Lanoes">
-        </div>
-        <div>
-          <label class="form-label">Warna</label>
-          <input type="text" class="form-input" id="manualWarna" placeholder="cth: Hitam">
-        </div>
+        <div class="parsed-items" id="parsedItems"></div>
       </div>
-      <div class="form-row">
-        <div>
-          <label class="form-label">Kategori</label>
-          <input type="text" class="form-input" id="manualKategori" placeholder="cth: Sweater">
-        </div>
-        <div>
-          <label class="form-label">Link Google Drive</label>
-          <input type="text" class="form-input" id="manualDrive" placeholder="https://drive.google.com/...">
-        </div>
-      </div>
-    </div>
-
-    <div class="submit-actions">
-      <button class="btn btn-primary" onclick="submitProduk()" id="submitBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Tambahkan ke Sheets
-      </button>
-      <span id="submitStatus" style="font-size:12px;color:var(--outline)"></span>
     </div>
   </div>
+
+  <!-- STEP 2: Manual Fields -->
+  <div class="card" id="manualCard" style="display:none">
+    <div class="card-title">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      Isi Manual (berlaku untuk semua produk di atas)
+    </div>
+
+    <div class="manual-fields">
+      <div class="form-group">
+        <label>Merk / Toko</label>
+        <input type="text" id="manualMerk" placeholder="cth: Lanoes">
+      </div>
+      <div class="form-group">
+        <label>Kategori</label>
+        <input type="text" id="manualKategori" placeholder="cth: Sandal">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <input type="text" id="manualStatus" placeholder="cth: Belum">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Link Drive (opsional)</label>
+      <input type="text" id="manualDrive" placeholder="https://drive.google.com/...">
+    </div>
+
+    <hr class="divider">
+
+    <div class="submit-actions">
+      <button class="btn btn-primary" id="submitBtn" onclick="submitToSheets()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Kirim ke Spreadsheet
+      </button>
+      <span id="submitStatus" style="font-size:13px;color:var(--outline)"></span>
+    </div>
+  </div>
+
 </div>
 </div>
 
-<!-- PAGE: PRODUK -->
+<!-- PAGE: PRODUK SHOWCASE -->
 <div class="page" id="page-produk">
 <div class="container">
   <div class="page-header">
     <div class="page-eyebrow">Katalog</div>
-    <h1 class="page-title">Produk</h1>
-    <p class="page-desc">Daftar semua produk dari Google Sheets — checklist yang sudah diedit.</p>
+    <h1 class="page-title">Daftar Produk</h1>
+    <p class="page-desc">Semua produk dari spreadsheet — bisa cari & langsung buka link.</p>
   </div>
 
-  <!-- Search bar + inline stats -->
+  <!-- Search + Stats -->
   <div class="card" style="padding:14px 16px">
     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px">
@@ -669,11 +731,10 @@ textarea.form-input { resize: vertical; min-height: 100px; }
         <span style="color:#e65100"><b id="psBelum2">0</b> belum</span>
       </div>
     </div>
-    <!-- Filter pills -->
-    <div class="filter-pills" style="margin-top:10px">
-      <button class="btn btn-sm btn-outline active" id="filterAll" onclick="setProdukFilter('all')">Semua</button>
-      <button class="btn btn-sm btn-outline" id="filterChecked" onclick="setProdukFilter('checked')">✅ Sudah Edit</button>
-      <button class="btn btn-sm btn-outline" id="filterUnchecked" onclick="setProdukFilter('unchecked')">☐ Belum Edit</button>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+      <button class="btn btn-sm btn-outline active" id="filterAll" onclick="setProdukFilter('all')" style="padding:6px 12px;font-size:11px">Semua</button>
+      <button class="btn btn-sm btn-outline" id="filterChecked" onclick="setProdukFilter('checked')" style="padding:6px 12px;font-size:11px">✅ Sudah Edit</button>
+      <button class="btn btn-sm btn-outline" id="filterUnchecked" onclick="setProdukFilter('unchecked')" style="padding:6px 12px;font-size:11px">☐ Belum Edit</button>
     </div>
   </div>
 
@@ -789,92 +850,106 @@ textarea.form-input { resize: vertical; min-height: 100px; }
     </div>
   </div>
 
-  <!-- ═══ OUTPUT ═══ -->
-  <div id="promptOutput" style="display:none">
-    <!-- Gemini output -->
-    <div id="fotoOutputPanel" style="display:none" class="output-panel">
-      <div class="output-header">
-        <div class="output-header-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          Gemini Photo Prompt
+  <!-- Output -->
+  <div id="promptOutput">
+
+    <!-- FOTO MODE -->
+    <div id="outFoto" style="display:none">
+      <div class="card">
+        <div class="card-title">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          Prompt Foto (Gemini)
         </div>
-        <span class="chip chip-active" id="fotoOutputBadge"></span>
-      </div>
-      <div class="output-body">
-        <div class="output-text" id="fotoOutputText"></div>
-        <div class="output-actions">
-          <button class="btn btn-primary btn-sm" onclick="copyOutput('fotoOutputText')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy
-          </button>
+        <div class="prompt-output-block">
+          <div class="prompt-header">
+            <span class="prompt-label">📷 Image Prompt</span>
+            <button class="copy-btn" onclick="copyPrompt('promptFotoText', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="prompt-box" id="promptFotoText"></div>
         </div>
       </div>
     </div>
 
-    <!-- Flow Scene 1 -->
-    <div id="video1OutputPanel" style="display:none" class="output-panel">
-      <div class="output-header">
-        <div class="output-header-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          Scene 1 — Entrance
+    <!-- VIDEO MODE -->
+    <div id="outVideo" style="display:none">
+      <div class="card">
+        <div class="card-title">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </div>
+          Prompt Video (Google Flow)
         </div>
-        <span class="chip chip-active" id="video1OutputBadge"></span>
-      </div>
-      <div class="output-body">
-        <div class="output-text" id="video1OutputText"></div>
-        <div class="output-actions">
-          <button class="btn btn-primary btn-sm" onclick="copyOutput('video1OutputText')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy
-          </button>
+
+        <div class="prompt-output-block">
+          <div class="prompt-header">
+            <span class="prompt-label">🎬 Scene 1 — Reveal (0–8 detik)</span>
+            <button class="copy-btn" onclick="copyPrompt('promptScene1Text', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="prompt-box" id="promptScene1Text"></div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="prompt-output-block">
+          <div class="prompt-header">
+            <span class="prompt-label">🎬 Scene 2 — Detail Close Up (8–16 detik)</span>
+            <button class="copy-btn" onclick="copyPrompt('promptScene2Text', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="prompt-box" id="promptScene2Text"></div>
+        </div>
+
+        <div class="alert alert-info" style="margin-top:14px;margin-bottom:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div>⚠️ Gunakan <strong>Extend clip</strong> dari Scene 1 untuk Scene 2 agar warna tetap konsisten.</div>
         </div>
       </div>
     </div>
 
-    <!-- Flow Scene 2 -->
-    <div id="video2OutputPanel" style="display:none" class="output-panel">
-      <div class="output-header">
-        <div class="output-header-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          Scene 2 — Showcase
-        </div>
-        <span class="chip chip-active" id="video2OutputBadge"></span>
-      </div>
-      <div class="output-body">
-        <div class="output-text" id="video2OutputText"></div>
-        <div class="output-actions">
-          <button class="btn btn-primary btn-sm" onclick="copyOutput('video2OutputText')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 
-  <!-- Loading state -->
-  <div id="promptLoading" style="display:none;text-align:center;padding:32px 0">
-    <div class="loading-spinner" style="margin:0 auto 10px"></div>
-    <p style="font-size:13px;color:var(--outline)">Generating...</p>
-  </div>
 </div>
 </div>
 
-<!-- TOAST -->
+<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-// ─── TOAST ────────────────────────────────────
-function showToast(msg, type = 'default') {
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = 'toast toast-' + type;
-  t.textContent = msg;
-  c.appendChild(t);
-  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2600);
-}
+// ─── CONFIG — ganti dengan URL Apps Script kamu ──────────────────────────────
+const API_URL = "https://script.google.com/macros/s/AKfycbzLVRazxD8tdkKkpIfph-iJYuwmV-_lAC2PnYCq85M-PBYoItzQh7qnQq-yGr1NJYuAdw/exec";
+// Contoh: "https://script.google.com/macros/s/AKfycbxxx/exec"
 
-// ─── TAB SWITCHING ────────────────────────────
+// ─── STATE ───────────────────────────────────
+let parsedProducts = [];
+
+async function apiFetch(body) {
+  // Prompt generation goes to our backend
+  if (body.action === 'generate-prompt') {
+    const res = await fetch('/generate-prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  }
+  // Sheets submit goes through our proxy (avoids CORS)
+  const res = await fetch('/sheets', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  return res.json();
+}
 function switchTab(tab) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -889,31 +964,10 @@ function switchTab(tab) {
 
 // ─── CHECKLIST (localStorage) ─────────────────
 const CHECK_KEY = 'minji_produk_checked';
+function getCheckedSet() { try { const r = localStorage.getItem(CHECK_KEY); return r ? new Set(JSON.parse(r)) : new Set(); } catch { return new Set(); } }
+function saveCheckedSet(s) { localStorage.setItem(CHECK_KEY, JSON.stringify([...s])); }
+function toggleCheck(key) { const c = getCheckedSet(); c.has(key) ? c.delete(key) : c.add(key); saveCheckedSet(c); updateProdukStats(); applyProdukFilter(); }
 
-function getCheckedSet() {
-  try {
-    const raw = localStorage.getItem(CHECK_KEY);
-    return raw ? new Set(JSON.parse(raw)) : new Set();
-  } catch { return new Set(); }
-}
-
-function saveCheckedSet(set) {
-  localStorage.setItem(CHECK_KEY, JSON.stringify([...set]));
-}
-
-function toggleCheck(produkKey) {
-  const checked = getCheckedSet();
-  if (checked.has(produkKey)) {
-    checked.delete(produkKey);
-  } else {
-    checked.add(produkKey);
-  }
-  saveCheckedSet(checked);
-  updateProdukStats();
-  applyProdukFilter(); // re-render with current filter
-}
-
-// ─── PRODUK SHOWCASE ──────────────────────────
 let allProduk = [];
 let currentProdukFilter = 'all';
 
@@ -950,16 +1004,13 @@ async function loadProduk() {
 function updateProdukStats() {
   const checked = getCheckedSet();
   const checkedCount = allProduk.filter(p => checked.has(p.produk + '|' + p.warna)).length;
-  const uncheckedCount = allProduk.length - checkedCount;
-
   document.getElementById('psTotal2').textContent = allProduk.length;
   document.getElementById('psSudah2').textContent = checkedCount;
-  document.getElementById('psBelum2').textContent = uncheckedCount;
+  document.getElementById('psBelum2').textContent = allProduk.length - checkedCount;
 }
 
 function setProdukFilter(mode) {
   currentProdukFilter = mode;
-  // Update pill active state
   document.getElementById('filterAll').classList.toggle('active', mode === 'all');
   document.getElementById('filterChecked').classList.toggle('active', mode === 'checked');
   document.getElementById('filterUnchecked').classList.toggle('active', mode === 'unchecked');
@@ -969,30 +1020,15 @@ function setProdukFilter(mode) {
 function applyProdukFilter() {
   const checked = getCheckedSet();
   const q = document.getElementById('produkSearch').value.toLowerCase().trim();
-
   let filtered = allProduk;
-
-  // Filter by check state
-  if (currentProdukFilter === 'checked') {
-    filtered = filtered.filter(p => checked.has(p.produk + '|' + p.warna));
-  } else if (currentProdukFilter === 'unchecked') {
-    filtered = filtered.filter(p => !checked.has(p.produk + '|' + p.warna));
-  }
-
-  // Filter by search query
-  if (q) {
-    filtered = filtered.filter(p =>
-      (p.produk || '').toLowerCase().includes(q) ||
-      (p.warna || '').toLowerCase().includes(q) ||
-      (p.kategori || '').toLowerCase().includes(q)
-    );
-  }
-
+  if (currentProdukFilter === 'checked') filtered = filtered.filter(p => checked.has(p.produk + '|' + p.warna));
+  else if (currentProdukFilter === 'unchecked') filtered = filtered.filter(p => !checked.has(p.produk + '|' + p.warna));
+  if (q) filtered = filtered.filter(p =>
+    (p.produk || '').toLowerCase().includes(q) ||
+    (p.warna || '').toLowerCase().includes(q) ||
+    (p.kategori || '').toLowerCase().includes(q)
+  );
   renderProduk(filtered);
-}
-
-function filterProduk() {
-  applyProdukFilter();
 }
 
 function renderProduk(products) {
@@ -1025,6 +1061,7 @@ function renderProduk(products) {
     if (p.link_drive) links.push(`<a href="${p.link_drive}" target="_blank" style="color:#4285f4;text-decoration:none;display:inline-flex;align-items:center;gap:3px;font-weight:500">${driveSvg} Drive</a>`);
     if (p.link_tokopedia) links.push(`<a href="${p.link_tokopedia}" target="_blank" style="color:#42b549;text-decoration:none;display:inline-flex;align-items:center;gap:3px;font-weight:500">${linkSvg} Tokopedia</a>`);
 
+    const keyEsc = produkKey.replace(/'/g, "\\'");
     row.innerHTML = `
       <td style="padding:10px 12px;color:var(--outline);font-weight:500;white-space:nowrap">${p.no}</td>
       <td style="padding:10px 12px;font-weight:600;color:var(--on-surface);min-width:140px">${p.produk || '-'}</td>
@@ -1032,7 +1069,7 @@ function renderProduk(products) {
       <td style="padding:10px 12px;color:var(--on-surface)">${p.kategori || '-'}</td>
       <td style="padding:10px 12px;text-align:center">
         <label style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center" title="Klik untuk toggle">
-          <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleCheck('${produkKey.replace(/'/g, "\\'")}')" style="width:18px;height:18px;cursor:pointer;accent-color:#2e7d32">
+          <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleCheck('${keyEsc}')" style="width:18px;height:18px;cursor:pointer;accent-color:#2e7d32">
         </label>
       </td>
       <td style="padding:10px 12px;text-align:center;white-space:nowrap">${links.join(' &nbsp; ') || '-'}</td>
@@ -1042,293 +1079,8 @@ function renderProduk(products) {
   });
 }
 
-// ─── PHOTO STATE ──────────────────────────────
-let fotoPhotos = [];
-let videoPhoto = null;
-
-function handleFotoPhotos(files) {
-  for (const f of files) {
-    if (fotoPhotos.length >= 8) break;
-    fotoPhotos.push(f);
-  }
-  renderFotoPreviews();
-}
-
-function removeFotoPhoto(idx) {
-  fotoPhotos.splice(idx, 1);
-  renderFotoPreviews();
-}
-
-function renderFotoPreviews() {
-  const c = document.getElementById('fotoPreviews');
-  const badge = document.getElementById('modeBadgeFoto');
-  const genCard = document.getElementById('fotoGenCard');
-  c.innerHTML = '';
-
-  if (!fotoPhotos.length) {
-    badge.textContent = 'Pilih foto dulu';
-    badge.className = 'upload-mode-badge';
-    genCard.style.display = 'none';
-    return;
-  }
-
-  fotoPhotos.forEach((f, i) => {
-    const div = document.createElement('div');
-    div.className = 'photo-preview';
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(f);
-    div.appendChild(img);
-    const btn = document.createElement('button');
-    btn.className = 'remove-btn';
-    btn.textContent = '×';
-    btn.onclick = (e) => { e.stopPropagation(); removeFotoPhoto(i); };
-    div.appendChild(btn);
-    c.appendChild(div);
-  });
-
-  const enough = fotoPhotos.length >= 2;
-  badge.textContent = `${fotoPhotos.length} foto dipilih`;
-  badge.className = 'upload-mode-badge';
-  badge.style.cssText = enough
-    ? 'background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7'
-    : 'background:#fff3e0;color:#e65100;border-color:#ffcc80';
-  genCard.style.display = enough ? 'block' : 'none';
-}
-
-function handleVideoPhoto(files) {
-  if (!files.length) return;
-  videoPhoto = files[0];
-  renderVideoPreview();
-}
-
-function renderVideoPreview() {
-  const c = document.getElementById('videoPreviews');
-  const badge = document.getElementById('modeBadgeVideo');
-  const genCard = document.getElementById('videoGenCard');
-  c.innerHTML = '';
-
-  if (!videoPhoto) {
-    badge.textContent = 'Pilih foto dulu';
-    badge.className = 'upload-mode-badge';
-    genCard.style.display = 'none';
-    return;
-  }
-
-  const div = document.createElement('div');
-  div.className = 'photo-preview';
-  const img = document.createElement('img');
-  img.src = URL.createObjectURL(videoPhoto);
-  div.appendChild(img);
-  const btn = document.createElement('button');
-  btn.className = 'remove-btn';
-  btn.textContent = '×';
-  btn.onclick = () => { videoPhoto = null; renderVideoPreview(); };
-  div.appendChild(btn);
-  c.appendChild(div);
-
-  badge.textContent = '1 foto dipilih';
-  badge.style.cssText = 'background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7';
-  genCard.style.display = 'block';
-}
-
-// ─── PROMPT GENERATION ────────────────────────
-async function generateFotoPrompt() {
-  if (fotoPhotos.length < 2) return;
-
-  const loading = document.getElementById('promptLoading');
-  const output = document.getElementById('promptOutput');
-  const panel = document.getElementById('fotoOutputPanel');
-
-  loading.style.display = 'block';
-  output.style.display = 'none';
-
-  try {
-    const formData = new FormData();
-    fotoPhotos.forEach(f => formData.append('photos', f));
-
-    const res = await fetch('/api/generate-foto-prompt', { method: 'POST', body: formData });
-    const data = await res.json();
-
-    if (!data.ok) throw new Error(data.detail || 'Gagal generate');
-
-    document.getElementById('fotoOutputText').textContent = data.prompt;
-    document.getElementById('fotoOutputBadge').textContent = `${fotoPhotos.length} foto → Gemini`;
-
-    loading.style.display = 'none';
-    output.style.display = 'block';
-    panel.style.display = 'block';
-    document.getElementById('video1OutputPanel').style.display = 'none';
-    document.getElementById('video2OutputPanel').style.display = 'none';
-
-    showToast('Prompt foto berhasil di-generate!', 'success');
-  } catch(e) {
-    loading.style.display = 'none';
-    showToast('Error: ' + e.message, 'error');
-  }
-}
-
-async function generateVideoPrompt() {
-  if (!videoPhoto) return;
-
-  const loading = document.getElementById('promptLoading');
-  const output = document.getElementById('promptOutput');
-
-  loading.style.display = 'block';
-  output.style.display = 'none';
-
-  try {
-    const formData = new FormData();
-    formData.append('photo', videoPhoto);
-
-    const res = await fetch('/api/generate-video-prompt', { method: 'POST', body: formData });
-    const data = await res.json();
-
-    if (!data.ok) throw new Error(data.detail || 'Gagal generate');
-
-    document.getElementById('video1OutputText').textContent = data.scene1;
-    document.getElementById('video1OutputBadge').textContent = 'Flow Scene 1';
-    document.getElementById('video2OutputText').textContent = data.scene2;
-    document.getElementById('video2OutputBadge').textContent = 'Flow Scene 2';
-
-    loading.style.display = 'none';
-    output.style.display = 'block';
-    document.getElementById('fotoOutputPanel').style.display = 'none';
-    document.getElementById('video1OutputPanel').style.display = 'block';
-    document.getElementById('video2OutputPanel').style.display = 'block';
-
-    showToast('2 scene prompts berhasil di-generate!', 'success');
-  } catch(e) {
-    loading.style.display = 'none';
-    showToast('Error: ' + e.message, 'error');
-  }
-}
-
-// ─── COPY ─────────────────────────────────────
-function copyOutput(elemId) {
-  const text = document.getElementById(elemId).textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('Disalin ke clipboard!', 'success');
-  });
-}
-
-// ─── SPREADSHEET ──────────────────────────────
-let parsedProducts = [];
-
-const tokpedLinks = document.getElementById('tokpedLinks');
-tokpedLinks.addEventListener('paste', () => setTimeout(parseLinks, 100));
-tokpedLinks.addEventListener('input', parseLinks);
-
-function parseLinks() {
-  const raw = document.getElementById('tokpedLinks').value.trim();
-  if (!raw) { clearParsed(); return; }
-
-  const urls = raw.split(/[\n\s,]+/).filter(u => u.includes('tokopedia.com'));
-  if (!urls.length) { clearParsed(); return; }
-
-  parsedProducts = urls.map(u => {
-    const parts = u.replace(/\/+$/, '').split('/');
-    let name = '';
-    for (let i = parts.length - 1; i >= 0; i--) {
-      if (parts[i] && !['p', 'dp', 'product'].includes(parts[i]) && !parts[i].includes('?')) {
-        name = decodeURIComponent(parts[i].replace(/-/g, ' '));
-        break;
-      }
-    }
-    const shopIdx = parts.indexOf('tokopedia.com') + 1;
-    const shop = shopIdx < parts.length - 1 ? parts[shopIdx] : '';
-    return { url: u, name: name || 'Produk', shop, warna: '', kategori: '', drive: '' };
-  });
-
-  renderParsed();
-}
-
-function renderParsed() {
-  const preview = document.getElementById('parsedPreview');
-  const items = document.getElementById('parsedItems');
-  const override = document.getElementById('manualOverride');
-
-  if (!parsedProducts.length) { clearParsed(); return; }
-  preview.style.display = 'block';
-  override.style.display = 'block';
-  items.innerHTML = '';
-
-  parsedProducts.forEach((p, i) => {
-    const div = document.createElement('div');
-    div.className = 'parsed-item';
-    div.innerHTML = `
-      <span class="parsed-num">${i + 1}</span>
-      <div class="parsed-info">
-        <div class="parsed-name">${p.name}</div>
-        <div class="parsed-link">${p.url}</div>
-        ${p.shop ? `<div class="parsed-chips"><span class="chip">${p.shop}</span></div>` : ''}
-      </div>
-    `;
-    items.appendChild(div);
-  });
-}
-
-function clearParsed() {
-  parsedProducts = [];
-  document.getElementById('parsedPreview').style.display = 'none';
-  document.getElementById('parsedItems').innerHTML = '';
-  document.getElementById('manualOverride').style.display = 'none';
-}
-
-async function submitProduk() {
-  if (!parsedProducts.length) {
-    showToast('Paste link Tokopedia dulu', 'error');
-    return;
-  }
-
-  const btn = document.getElementById('submitBtn');
-  const status = document.getElementById('submitStatus');
-  btn.disabled = true;
-  status.textContent = 'Mengirim...';
-
-  const manualNama = document.getElementById('manualNama').value.trim();
-  const manualMerk = document.getElementById('manualMerk').value.trim();
-  const manualWarna = document.getElementById('manualWarna').value.trim();
-  const manualKategori = document.getElementById('manualKategori').value.trim();
-  const manualDrive = document.getElementById('manualDrive').value.trim();
-
-  let success = 0;
-  let fail = 0;
-
-  for (const p of parsedProducts) {
-    try {
-      const res = await fetch('/sheets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nama_produk: manualNama || p.name,
-          merk: manualMerk || p.shop,
-          warna: manualWarna || '',
-          kategori: manualKategori || '',
-          link_tokopedia: p.url,
-          link_drive: manualDrive || '',
-          notes: ''
-        })
-      });
-      const data = await res.json();
-      if (data.result === 'success') success++;
-      else fail++;
-    } catch { fail++; }
-  }
-
-  btn.disabled = false;
-  status.textContent = '';
-
-  if (success > 0) {
-    showToast(`${success} produk berhasil ditambahkan!`, 'success');
-    document.getElementById('tokpedLinks').value = '';
-    clearParsed();
-    document.getElementById('manualNama').value = '';
-    document.getElementById('manualMerk').value = '';
-    document.getElementById('manualWarna').value = '';
-    document.getElementById('manualKategori').value = '';
-    document.getElementById('manualDrive').value = '';
-  }
-  if (fail > 0) showToast(`${fail} gagal`, 'error');
+function filterProduk() {
+  applyProdukFilter();
 }
 
 // Auto-load when switching to produk tab
@@ -1337,6 +1089,371 @@ window.switchTab = function(tab) {
   _switchTabOrig(tab);
   if (tab === 'produk') loadProduk();
 };
+
+// ─── TOAST ────────────────────────────────────
+function showToast(msg, type = 'default') {
+  const tc = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icons = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+    error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    default: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+  };
+  t.innerHTML = (icons[type] || icons.default) + `<span>${msg}</span>`;
+  tc.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(8px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); }, 3000);
+}
+
+// ─── FITUR 1: PARSER ─────────────────────────
+function parseLinks() {
+  const raw = document.getElementById('bulkInput').value.trim();
+  if (!raw) { showToast('Paste link dulu ya!', 'error'); return; }
+
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l);
+  const results = [];
+  let current = null;
+
+  for (const line of lines) {
+    const isURL = /^https?:\/\//i.test(line);
+
+    if (isURL) {
+      // Simpan produk sebelumnya
+      if (current) results.push(current);
+
+      // Pisah URL dari inline text (jika ada setelah spasi atau slash terakhir)
+      // Contoh: "https://...xxx/ sendal wedges, hitam"
+      const spaceIdx = line.search(/\s/);
+      let url, inlineText = '';
+
+      if (spaceIdx > -1) {
+        url = line.substring(0, spaceIdx).replace(/\/$/, '');
+        inlineText = line.substring(spaceIdx).trim();
+      } else {
+        url = line.replace(/\/$/, '');
+      }
+
+      if (inlineText) {
+        const parts = inlineText.split(',').map(s => s.trim());
+        current = { url, nama: parts[0] || '', warna: parts[1] || '' };
+      } else {
+        current = { url, nama: '', warna: '' };
+      }
+
+    } else if (current) {
+      // Baris non-URL setelah URL = nama produk / warna
+      if (!current.nama && !current.warna) {
+        const parts = line.split(',').map(s => s.trim());
+        current.nama  = parts[0] || '';
+        current.warna = parts[1] || '';
+      } else if (current.nama && !current.warna) {
+        // Baris ini mungkin hanya warna
+        current.warna = line;
+      }
+    }
+  }
+
+  if (current) results.push(current);
+
+  if (!results.length) { showToast('Tidak ada link valid yang ditemukan.', 'error'); return; }
+
+  parsedProducts = results;
+  renderParsed();
+  showToast(`${results.length} produk berhasil di-parse!`, 'success');
+}
+
+function renderParsed() {
+  const container = document.getElementById('parsedItems');
+  const preview = document.getElementById('parsedPreview');
+  const manualCard = document.getElementById('manualCard');
+  const count = document.getElementById('parsedCount');
+
+  if (!parsedProducts.length) {
+    preview.style.display = 'none';
+    manualCard.style.display = 'none';
+    return;
+  }
+
+  count.textContent = `${parsedProducts.length} produk ditemukan`;
+  preview.style.display = 'block';
+  manualCard.style.display = 'block';
+
+  container.innerHTML = parsedProducts.map((p, i) => `
+    <div class="parsed-item">
+      <div class="parsed-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="parsed-info">
+        <div class="parsed-name">${p.nama || '<span style="color:var(--outline);font-style:italic">nama belum terdeteksi</span>'}</div>
+        <div class="parsed-link">${p.url}</div>
+        <div class="parsed-chips">
+          ${p.warna ? `<span class="chip">${p.warna}</span>` : ''}
+        </div>
+      </div>
+      <button class="parsed-remove" onclick="removeProduct(${i})" title="Hapus">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+function removeProduct(i) {
+  parsedProducts.splice(i, 1);
+  renderParsed();
+}
+
+function clearParsed() {
+  parsedProducts = [];
+  renderParsed();
+}
+
+async function submitToSheets() {
+  if (!parsedProducts.length) { showToast('Tidak ada produk untuk dikirim.', 'error'); return; }
+
+  const merk = document.getElementById('manualMerk').value.trim();
+  const kategori = document.getElementById('manualKategori').value.trim();
+  const status = document.getElementById('manualStatus').value.trim() || '❌ Belum';
+  const drive = document.getElementById('manualDrive').value.trim();
+
+  const btn = document.getElementById('submitBtn');
+  const statusEl = document.getElementById('submitStatus');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span> Mengirim...';
+
+  const items = parsedProducts.map(p => ({
+    link_tokopedia: p.url,
+    produk: p.nama || '-',
+    warna: p.warna || '',
+    merk,
+    kategori,
+    link_drive: drive,
+    status,
+  }));
+
+  try {
+    const data = await apiFetch({ action: 'submit-bulk', items });
+    if (data.ok) {
+      showToast(`✅ ${data.added} produk berhasil masuk ke Spreadsheet!`, 'success');
+      statusEl.textContent = `${data.added} produk dikirim${data.skipped ? `, ${data.skipped} dilewati` : ''}`;
+      parsedProducts = [];
+      renderParsed();
+      document.getElementById('bulkInput').value = '';
+    } else {
+      throw new Error(data.detail || 'Gagal kirim');
+    }
+  } catch (e) {
+    showToast('Gagal kirim: ' + e.message, 'error');
+    statusEl.textContent = '';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Kirim ke Spreadsheet`;
+  }
+}
+
+// ─── FITUR 2: UPLOAD & PROMPT (TERPISAH) ──────
+let fotoPhotos = [];
+let videoPhoto = null;
+
+function handleFotoPhotos(files) {
+  const newFiles = Array.from(files);
+  fotoPhotos = [...fotoPhotos, ...newFiles];
+  renderFotoPreviews();
+  updateFotoMode();
+  document.getElementById('fotoInput').value = '';
+}
+
+function handleVideoPhoto(files) {
+  videoPhoto = files[0] || null;
+  renderVideoPreview();
+  updateVideoMode();
+  document.getElementById('videoInput').value = '';
+}
+
+function renderFotoPreviews() {
+  const container = document.getElementById('fotoPreviews');
+  const genCard = document.getElementById('fotoGenCard');
+
+  container.innerHTML = '';
+  if (!fotoPhotos.length) {
+    genCard.style.display = 'none';
+    document.getElementById('outFoto').style.display = 'none';
+    return;
+  }
+  genCard.style.display = 'block';
+  document.getElementById('outFoto').style.display = 'none';
+
+  fotoPhotos.forEach((file, i) => {
+    const url = URL.createObjectURL(file);
+    const label = i === 0 ? 'PRODUK' : i === 1 ? 'BACKGROUND' : `FOTO ${i+1}`;
+    const div = document.createElement('div');
+    div.className = 'photo-thumb';
+    div.innerHTML = `
+      <img src="${url}" alt="Foto ${i+1}">
+      <div class="thumb-label">${label}</div>
+      <button class="thumb-remove" onclick="removeFotoPhoto(${i})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function renderVideoPreview() {
+  const container = document.getElementById('videoPreviews');
+  const genCard = document.getElementById('videoGenCard');
+
+  container.innerHTML = '';
+  if (!videoPhoto) {
+    genCard.style.display = 'none';
+    document.getElementById('outVideo').style.display = 'none';
+    return;
+  }
+  genCard.style.display = 'block';
+  document.getElementById('outVideo').style.display = 'none';
+
+  const url = URL.createObjectURL(videoPhoto);
+  const div = document.createElement('div');
+  div.className = 'photo-thumb';
+  div.innerHTML = `
+    <img src="${url}" alt="Foto Produk">
+    <div class="thumb-label">PRODUK</div>
+    <button class="thumb-remove" onclick="removeVideoPhoto()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+  container.appendChild(div);
+}
+
+function removeFotoPhoto(i) {
+  fotoPhotos.splice(i, 1);
+  renderFotoPreviews();
+  updateFotoMode();
+}
+
+function removeVideoPhoto() {
+  videoPhoto = null;
+  renderVideoPreview();
+  updateVideoMode();
+}
+
+function updateFotoMode() {
+  const badge = document.getElementById('modeBadgeFoto');
+  const n = fotoPhotos.length;
+  if (n === 0) {
+    badge.textContent = 'Pilih foto dulu';
+    badge.style.background = 'var(--primary-xlight)';
+    badge.style.color = '';
+  } else {
+    badge.textContent = `${n} foto siap — klik Generate Prompt Foto`;
+    badge.style.background = 'var(--success-c)';
+    badge.style.color = 'var(--success)';
+  }
+}
+
+function updateVideoMode() {
+  const badge = document.getElementById('modeBadgeVideo');
+  if (!videoPhoto) {
+    badge.textContent = 'Pilih foto dulu';
+    badge.style.background = 'var(--primary-xlight)';
+    badge.style.color = '';
+  } else {
+    badge.textContent = '1 foto siap — klik Generate Prompt Video';
+    badge.style.background = '#fff3cd';
+    badge.style.color = '#856404';
+  }
+}
+
+// Drag & drop — FOTO
+const zoneFoto = document.getElementById('uploadZoneFoto');
+zoneFoto.addEventListener('dragover', e => { e.preventDefault(); zoneFoto.classList.add('drag-over'); });
+zoneFoto.addEventListener('dragleave', () => zoneFoto.classList.remove('drag-over'));
+zoneFoto.addEventListener('drop', e => {
+  e.preventDefault();
+  zoneFoto.classList.remove('drag-over');
+  if (e.dataTransfer.files.length) handleFotoPhotos(e.dataTransfer.files);
+});
+
+// Drag & drop — VIDEO
+const zoneVideo = document.getElementById('uploadZoneVideo');
+zoneVideo.addEventListener('dragover', e => { e.preventDefault(); zoneVideo.classList.add('drag-over'); });
+zoneVideo.addEventListener('dragleave', () => zoneVideo.classList.remove('drag-over'));
+zoneVideo.addEventListener('drop', e => {
+  e.preventDefault();
+  zoneVideo.classList.remove('drag-over');
+  if (e.dataTransfer.files.length) handleVideoPhoto(e.dataTransfer.files);
+});
+
+async function generateFotoPrompt() {
+  if (fotoPhotos.length < 2) { showToast('Upload minimal 2 foto (produk & background)!', 'error'); return; }
+
+  const btn = event.currentTarget;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span> Generating...';
+
+  try {
+    const res = await fetch('/generate-prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'generate-prompt', mode: 'foto' }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.detail || 'Gagal generate');
+
+    const outFoto = document.getElementById('outFoto');
+    document.getElementById('promptFotoText').textContent = data.prompt;
+    outFoto.style.display = 'block';
+    outFoto.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Prompt foto berhasil di-generate!', 'success');
+
+  } catch(e) {
+    showToast('Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Generate Prompt Foto`;
+  }
+}
+
+async function generateVideoPrompt() {
+  if (!videoPhoto) { showToast('Upload 1 foto dulu!', 'error'); return; }
+
+  const btn = event.currentTarget;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span> Generating...';
+
+  try {
+    const res = await fetch('/generate-prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'generate-prompt', mode: 'video' }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.detail || 'Gagal generate');
+
+    const outVideo = document.getElementById('outVideo');
+    document.getElementById('promptScene1Text').textContent = data.scene1;
+    document.getElementById('promptScene2Text').textContent = data.scene2;
+    outVideo.style.display = 'block';
+    outVideo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Prompt video berhasil di-generate!', 'success');
+
+  } catch(e) {
+    showToast('Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> Generate Prompt Video`;
+  }
+}
+
+function copyPrompt(id, btn) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`;
+    }, 2000);
+    showToast('Prompt disalin!', 'success');
+  });
+}
 </script>
 </body>
 </html>
