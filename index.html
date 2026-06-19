@@ -470,6 +470,53 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ── PRODUCT CARDS ── */
+  .produk-card {
+    background: var(--surface-card);
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+    padding: 16px;
+    transition: all .18s ease;
+  }
+  .produk-card:hover { border-color: var(--primary-c); box-shadow: 0 2px 12px rgba(0,163,196,0.08); }
+  .produk-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .produk-card-no {
+    font-size: 11px; font-weight: 600; color: var(--outline);
+    background: var(--primary-xlight); padding: 2px 8px; border-radius: 99px;
+  }
+  .produk-card-status {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 99px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .produk-card-status.sudah { background: #e8f5e9; color: #2e7d32; }
+  .produk-card-status.belum { background: #fff3e0; color: #e65100; }
+  .produk-card-name {
+    font-size: 15px; font-weight: 600; color: var(--on-surface);
+    margin-bottom: 4px; font-family: 'Montserrat', sans-serif;
+  }
+  .produk-card-meta {
+    font-size: 12px; color: var(--outline); margin-bottom: 10px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .produk-card-meta span {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--bg); padding: 2px 8px; border-radius: 6px;
+  }
+  .produk-card-links {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .produk-card-link {
+    font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 8px;
+    background: var(--primary-xlight); color: var(--primary);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+    transition: all .15s ease;
+  }
+  .produk-card-link:hover { background: var(--primary-c); color: #fff; }
+  .produk-card-link svg { width: 12px; height: 12px; }
+
   /* ── TOAST ── */
   .toast-container {
     position: fixed; bottom: 24px; right: 24px;
@@ -553,6 +600,7 @@
   </div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchTab('sheets')">Spreadsheet</button>
+    <button class="nav-tab" onclick="switchTab('produk')">Produk</button>
     <button class="nav-tab" onclick="switchTab('prompt')">Prompt Gen</button>
   </div>
 </nav>
@@ -562,6 +610,10 @@
   <button class="mobile-tab active" id="mob-sheets" onclick="switchTab('sheets')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
     Spreadsheet
+  </button>
+  <button class="mobile-tab" id="mob-produk" onclick="switchTab('produk')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+    Produk
   </button>
   <button class="mobile-tab" id="mob-prompt" onclick="switchTab('prompt')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
@@ -652,6 +704,58 @@
     </div>
   </div>
 
+</div>
+</div>
+
+<!-- PAGE: PRODUK SHOWCASE -->
+<div class="page" id="page-produk">
+<div class="container">
+  <div class="page-header">
+    <div class="page-eyebrow">Katalog</div>
+    <h1 class="page-title">Daftar Produk</h1>
+    <p class="page-desc">Semua produk yang udah masuk ke spreadsheet — bisa dicari & langsung buka link.</p>
+  </div>
+
+  <!-- Search -->
+  <div class="card" style="padding:12px 16px">
+    <div style="display:flex;gap:10px;align-items:center">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--outline);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="produkSearch" placeholder="Cari produk, warna, merk..." style="border:none;outline:none;font-size:14px;width:100%;background:transparent;font-family:'Inter',sans-serif" oninput="filterProduk()">
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('produkSearch').value='';filterProduk()">✕</button>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-row" id="produkStats" style="display:none">
+    <div class="stat-item">
+      <div class="stat-value" id="psTotal">0</div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="psSudah">0</div>
+      <div class="stat-label">Sudah</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="psBelum">0</div>
+      <div class="stat-label">Belum</div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="produkLoading" style="text-align:center;padding:40px 0;color:var(--outline)">
+    <div class="loading-spinner" style="margin:0 auto 12px"></div>
+    Memuat produk...
+  </div>
+
+  <!-- Product grid -->
+  <div id="produkGrid" style="display:grid;gap:12px;grid-template-columns:1fr"></div>
+
+  <!-- Empty state -->
+  <div id="produkEmpty" style="display:none;text-align:center;padding:60px 0;color:var(--outline)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;margin-bottom:12px;opacity:0.3"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+    <p style="font-size:15px;font-weight:500">Belum ada produk</p>
+    <p style="font-size:13px">Tambahin dulu lewat tab Spreadsheet</p>
+  </div>
 </div>
 </div>
 
@@ -840,10 +944,112 @@ function switchTab(tab) {
   document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + tab).classList.add('active');
 
-  const idx = tab === 'sheets' ? 0 : 1;
+  const idxMap = { sheets: 0, produk: 1, prompt: 2 };
+  const idx = idxMap[tab] ?? 0;
   document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
   document.getElementById('mob-' + tab)?.classList.add('active');
 }
+
+// ─── PRODUK SHOWCASE ──────────────────────────
+let allProduk = [];
+
+async function loadProduk() {
+  const loading = document.getElementById('produkLoading');
+  const grid = document.getElementById('produkGrid');
+  const empty = document.getElementById('produkEmpty');
+  const stats = document.getElementById('produkStats');
+
+  loading.style.display = 'block';
+  grid.innerHTML = '';
+  empty.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/products');
+    const data = await res.json();
+
+    if (!data.ok) throw new Error(data.detail || 'Gagal memuat');
+    allProduk = data.products || [];
+
+    loading.style.display = 'none';
+
+    if (!allProduk.length) {
+      empty.style.display = 'block';
+      return;
+    }
+
+    // Stats
+    const sudah = allProduk.filter(p => (p.status || '').toLowerCase().includes('sudah') || (p.status || '').includes('✅')).length;
+    const belum = allProduk.length - sudah;
+    document.getElementById('psTotal').textContent = allProduk.length;
+    document.getElementById('psSudah').textContent = sudah;
+    document.getElementById('psBelum').textContent = belum;
+    stats.style.display = 'flex';
+
+    renderProduk(allProduk);
+  } catch(e) {
+    loading.innerHTML = `<p style="color:var(--error)">❌ ${e.message}</p>`;
+  }
+}
+
+function renderProduk(products) {
+  const grid = document.getElementById('produkGrid');
+  const empty = document.getElementById('produkEmpty');
+  grid.innerHTML = '';
+
+  if (!products.length) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const linkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>';
+
+  products.forEach(p => {
+    const statusClass = (p.status || '').toLowerCase().includes('sudah') || (p.status || '').includes('✅') ? 'sudah' : 'belum';
+    const statusText = statusClass === 'sudah' ? '✅ Sudah' : '⏳ Belum';
+
+    const card = document.createElement('div');
+    card.className = 'produk-card';
+    card.innerHTML = `
+      <div class="produk-card-header">
+        <span class="produk-card-no">#${p.no}</span>
+        <span class="produk-card-status ${statusClass}">${statusText}</span>
+      </div>
+      <div class="produk-card-name">${p.produk || '-'}</div>
+      <div class="produk-card-meta">
+        ${p.merk ? `<span>🏪 ${p.merk}</span>` : ''}
+        ${p.warna ? `<span>🎨 ${p.warna}</span>` : ''}
+        ${p.kategori ? `<span>📁 ${p.kategori}</span>` : ''}
+        ${p.tanggal ? `<span>📅 ${p.tanggal}</span>` : ''}
+      </div>
+      <div class="produk-card-links">
+        ${p.link_tokopedia ? `<a href="${p.link_tokopedia}" target="_blank" class="produk-card-link">${linkIcon} Tokopedia</a>` : ''}
+        ${p.link_drive ? `<a href="${p.link_drive}" target="_blank" class="produk-card-link">${linkIcon} Drive</a>` : ''}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function filterProduk() {
+  const q = document.getElementById('produkSearch').value.toLowerCase().trim();
+  if (!q) { renderProduk(allProduk); return; }
+  const filtered = allProduk.filter(p =>
+    (p.produk || '').toLowerCase().includes(q) ||
+    (p.merk || '').toLowerCase().includes(q) ||
+    (p.warna || '').toLowerCase().includes(q) ||
+    (p.kategori || '').toLowerCase().includes(q) ||
+    (p.status || '').toLowerCase().includes(q)
+  );
+  renderProduk(filtered);
+}
+
+// Auto-load when switching to produk tab
+const _switchTabOrig = window.switchTab;
+window.switchTab = function(tab) {
+  _switchTabOrig(tab);
+  if (tab === 'produk') loadProduk();
+};
 
 // ─── TOAST ────────────────────────────────────
 function showToast(msg, type = 'default') {

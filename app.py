@@ -166,6 +166,39 @@ def health():
     return {"ok": True, "app": "MINJI Tools"}
 
 
+@app.get("/api/products")
+def get_products():
+    """Fetch all products from Google Sheets for showcase."""
+    if not SHEETS_ENABLED:
+        return JSONResponse({"ok": False, "detail": "Google Sheets not configured"})
+    try:
+        svc = get_sheets_service()
+        if not svc:
+            return JSONResponse({"ok": False, "detail": "Sheets service unavailable"})
+        r = svc.spreadsheets().values().get(
+            spreadsheetId=SHEET_ID, range=f"{SHEET_TAB}!A:H"
+        ).execute()
+        vals = r.get("values", [])
+        headers = vals[0] if vals else []
+        data = vals[1:] if len(vals) > 1 else []
+        products = []
+        for i, row in enumerate(data):
+            products.append({
+                "no": i + 1,
+                "tanggal": row[0] if len(row) > 0 else "",
+                "produk": row[1] if len(row) > 1 else "",
+                "merk": row[2] if len(row) > 2 else "",
+                "warna": row[3] if len(row) > 3 else "",
+                "kategori": row[4] if len(row) > 4 else "",
+                "status": row[5] if len(row) > 5 else "",
+                "link_drive": row[6] if len(row) > 6 else "",
+                "link_tokopedia": row[7] if len(row) > 7 else "",
+            })
+        return JSONResponse({"ok": True, "count": len(products), "products": products})
+    except Exception as e:
+        return JSONResponse({"ok": False, "detail": str(e)})
+
+
 @app.post("/sheets")
 async def sheets_proxy(request: Request):
     """Proxy requests to Apps Script to avoid CORS issues."""
