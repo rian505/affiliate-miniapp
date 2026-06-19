@@ -193,7 +193,8 @@ def get_products():
             if not nama:
                 continue
             count += 1
-            # Parse gviz date format: Date(2026,3,6) → 04/06/2026 (month is 0-indexed)
+            # Parse gviz date format: Date(2026,3,6) → 06/04/2026 (month is 0-indexed)
+            from datetime import datetime
             raw_date = str(cell(0)).strip()
             tanggal = raw_date
             if raw_date.startswith("Date("):
@@ -203,6 +204,9 @@ def get_products():
                     tanggal = f"{d:02d}/{m:02d}/{y}"
                 except Exception:
                     pass
+            # If date is empty (added via Apps Script), use today's date
+            if not tanggal or tanggal == "None" or tanggal == "NULL":
+                tanggal = datetime.now().strftime("%d/%m/%Y")
             # Edit checkbox: column no longer exists, default False (frontend uses localStorage)
             is_edited = False
             products.append({
