@@ -170,16 +170,15 @@ def health():
 def get_products():
     """Fetch all products from Google Sheets for showcase."""
     if not SHEETS_ENABLED:
-        return JSONResponse({"ok": False, "detail": "Google Sheets not configured"})
+        return JSONResponse({"ok": True, "count": 0, "products": []})
     try:
         svc = get_sheets_service()
         if not svc:
-            return JSONResponse({"ok": False, "detail": "Sheets service unavailable"})
+            return JSONResponse({"ok": True, "count": 0, "products": []})
         r = svc.spreadsheets().values().get(
             spreadsheetId=SHEET_ID, range=f"{SHEET_TAB}!A:H"
         ).execute()
         vals = r.get("values", [])
-        headers = vals[0] if vals else []
         data = vals[1:] if len(vals) > 1 else []
         products = []
         for i, row in enumerate(data):
